@@ -5,6 +5,16 @@
 <p>Set Reminders in advance to move your vehicle.</p>
 <p>Save your frequent parking locations and see an overview of monthly cleaning schedules</p>
 
+<h1>Technology</h1>
+  <ul>
+    <li style='disc'>Ruby on Rails</li>
+    <li style='disc'>PostGIS</li>
+    <li style='disc'>Google Maps API</li>
+    <li style='disc'>QGIS</li>
+    <li style='disc'>JavaScript</li>
+    <li style='disc'>HTML5/CSS3</li>
+  </ul>
+
 <h1>Minimum Viable Product</h1>
   <ul>
     <li style='disc'>Search by address function.</li>
