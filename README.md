@@ -1,4 +1,4 @@
-<h1>StreetCleaningSF</h2>
+<h1>StreetCleaningSF</h1>
 <p>StreetCleaningSF is a chrome extension designed to help you keep track of when and where to move your vehicle for pesky street cleaning schedules here in San Francisco</p>
 <p>StreetCleaningSF utilizes Google Maps API with a KML layer to accurately pin point your location.</p>
 <p>StreetCleaningSF uses a dedicated server for fast querying.</p>
@@ -42,7 +42,7 @@
     <li type='disc'>Test fetching</li>
   </ul>
 
-<h4>Thursday 9/22</h3>
+<h3>Thursday 9/22</h3>
   <ul>
     <li type='disc'>Add reminder feature</li>
     <li type='disc'>Add cache</li>
