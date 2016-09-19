@@ -5,23 +5,23 @@
 <p>Set Reminders in advance to move your vehicle.</p>
 <p>Save your frequent parking locations and see an overview of monthly cleaning schedules</p>
 
-<h1>Minimum Viable Product</j1>
-<ul>
-  <li style='disc'>Search by address function.</li>
-  <li style='disc'>Fetches correct schedule from database based on location entered.</li>
-  <li style='disc'>Chrome alert</li>
-  <li style='disc'>Google Maps integration for view.</li>
-</ul>
+<h1>Minimum Viable Product</h1>
+  <ul>
+    <li style='disc'>Search by address function.</li>
+    <li style='disc'>Fetches correct schedule from database based on location entered.</li>
+    <li style='disc'>Chrome alert</li>
+    <li style='disc'>Google Maps integration for view.</li>
+  </ul>
 
 <h1>Wireframes</h1>
   <p>Interactive calendar feature for an overview of cleaning schedules</p>
   <img src='https://s3.amazonaws.com/codementor_content/2014-Nov-wekk4/calendar.gif' />
 
   <p>Google Maps view of parking locations</p>
-  <img src='' />
+  <img src='https://github.com/jz-wang/StreetCleaningSF/blob/master/wireframes/scsf.jpg' />
 
   <p>Reminder for moving car</p>
-  <img src='' />
+  <img src='https://github.com/jz-wang/StreetCleaningSF/blob/master/wireframes/alert.png' />
 
 <h1>Implementation Timeline<h1>
 <h3>Monday 9/19</h3>
