@@ -1,24 +1,24 @@
 <h1>StreetCleaningSF</h1>
-<p>StreetCleaningSF is a chrome extension designed to help you keep track of when and where to move your vehicle for pesky street cleaning schedules here in San Francisco</p>
+<p>StreetCleaningSF is a chrome extension designed to help you keep track of when and where to move your vehicle for the pesky street cleaning schedules here in San Francisco</p>
 <p>StreetCleaningSF utilizes Google Maps API with a KML layer to accurately pin point your location.</p>
 <p>StreetCleaningSF uses a dedicated server for fast querying.</p>
-<p>Set Reminders in advance to move your vehicle.</p>
-<p>Save your frequent parking locations and see an overview of monthly cleaning schedules</p>
+<p>Set Reminders in advance to move your vehicles.</p>
+<p>Save your frequent parking locations and see an overview of upcoming cleaning schedules</p>
 
 <h1>Technology</h1>
   <ul>
     <li style='disc'>Ruby on Rails</li>
     <li style='disc'>PostGIS</li>
-    <li style='disc'>Google Maps API</li>
     <li style='disc'>QGIS</li>
+    <li style='disc'>Google Maps API</li>
     <li style='disc'>JavaScript</li>
     <li style='disc'>HTML5/CSS3</li>
   </ul>
 
 <h1>Minimum Viable Product</h1>
   <ul>
-    <li style='disc'>Search by address function.</li>
-    <li style='disc'>Fetches correct schedule from database based on location entered.</li>
+    <li style='disc'>Search by address.</li>
+    <li style='disc'>Fetches correct schedules from database based on location entered.</li>
     <li style='disc'>Chrome alert</li>
     <li style='disc'>Google Maps integration for view.</li>
   </ul>
@@ -30,7 +30,7 @@
   <p>Google Maps view of parking locations</p>
   <img src='https://github.com/jz-wang/StreetCleaningSF/blob/master/wireframes/scsf.jpg' />
 
-  <p>Reminder for moving car</p>
+  <p>Reminders for moving car</p>
   <img src='https://github.com/jz-wang/StreetCleaningSF/blob/master/wireframes/alert.png' />
 
 <h1>Implementation Timeline<h1>
@@ -61,6 +61,6 @@
 <h1>Bonus Features</h1>
   <ul>
     <li type='disc'>Google Maps view of clickable streets highlighted</li>
-    <li type='disc'>Algorithm for finding best parking spot</li>
+    <li type='disc'>Algorithm for finding best parking spots</li>
     <li type='disc'>Host on dedicated server</li>
   </ul>
