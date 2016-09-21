@@ -5,20 +5,15 @@
 
   "description": "Your Street Cleaning Reminder",
   "icons": {
-    "16": "icons/broom-16.png",
-    "48": "icons/broom-48.png",
-    "128": "icons/broom-128.png"
-  },
-
-  "background": {
-    "persistant": false,
-    "script": ["popup.jsx"]
+    "16": "assets/icons/broom-16.png",
+    "48": "assets/icons/broom-48.png",
+    "128": "assets/icons/broom-128.png"
   },
 
   "browser_action": {
     "default_icon": {
-      "19": "icons/broom-19.png",
-      "38": "icons/broom-38.png"
+      "19": "assets/icons/broom-19.png",
+      "38": "assets/icons/broom-38.png"
     },
     "default_title": "Check Schedule",
     "default_popup": "popup.html"
