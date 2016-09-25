@@ -5,7 +5,7 @@ import { getChromeSync,
 import Address from './address';
 
 const mapStateToProps = state => {
-  return { addresses: state['AddressReducer'] };
+  return { addresses: state.addresses };
 };
 
 const mapDispatchToProps = dispatch => ({

@@ -22348,7 +22348,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var RootReducer = (0, _redux.combineReducers)({
-	  AddressReducer: _address_reducer2.default
+	  addresses: _address_reducer2.default
 	});
 	
 	exports.default = RootReducer;
@@ -26872,7 +26872,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var mapStateToProps = function mapStateToProps(state) {
-	  return { addresses: state['AddressReducer'] };
+	  return { addresses: state.addresses };
 	};
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
