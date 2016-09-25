@@ -1,15 +1,13 @@
 import React from 'react';
-import Stats from './stats';
+import StatsContainer from './stats/stats_container';
 
-class App extends React.Component {
-  render(){
-    return (
-      <div>
-        <h1>StreetCleaningSF</h1>
-        <Stats />
-      </div>
-    );
-  }
-}
+const App = ({children}) => {
+  return (
+    <div>
+      <h1>StreetCleaningSF</h1>
+      <StatsContainer />
+    </div>
+  );
+};
 
 export default App;
