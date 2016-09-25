@@ -8,9 +8,9 @@ export const getChromeSync = () => ({
   type: StatsConstants.GET_CHROME_SYNC
 });
 
-export const setChromeSync = (obj) => ({
+export const setChromeSync = (data) => ({
   type: StatsConstants.SET_CHROME_SYNC,
-  obj
+  data
 });
 
 export const receiveChromeSync = obj => ({

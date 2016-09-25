@@ -14,7 +14,7 @@ const StatsMiddleware = ({getState, dispatch}) => next => action => {
       getChromeSyncAPI(success);
       return next(action);
     case StatsConstants.SET_CHROME_SYNC:
-      const data = action.obj;
+      const data = action.data;
       setChromeSyncAPI(data);
       return next(action);
     default:

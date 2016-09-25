@@ -22378,7 +22378,11 @@
 	  switch (action.type) {
 	    case _stats_actions.StatsConstants.RECEIVE_CHROME_SYNC:
 	      var storage = action.obj.addresses;
-	      return storage;
+	      if (storage === undefined) {
+	        return state;
+	      } else {
+	        return storage;
+	      }
 	    default:
 	      return state;
 	  }
@@ -22407,10 +22411,10 @@
 	  };
 	};
 	
-	var setChromeSync = exports.setChromeSync = function setChromeSync(obj) {
+	var setChromeSync = exports.setChromeSync = function setChromeSync(data) {
 	  return {
 	    type: StatsConstants.SET_CHROME_SYNC,
-	    obj: obj
+	    data: data
 	  };
 	};
 	
@@ -26036,7 +26040,7 @@
 	          (0, _stats_api_util.getChromeSyncAPI)(success);
 	          return next(action);
 	        case _stats_actions.StatsConstants.SET_CHROME_SYNC:
-	          var data = action.obj;
+	          var data = action.data;
 	          (0, _stats_api_util.setChromeSyncAPI)(data);
 	          return next(action);
 	        default:
@@ -26062,7 +26066,7 @@
 	};
 	
 	var setChromeSyncAPI = exports.setChromeSyncAPI = function setChromeSyncAPI(data) {
-	  chrome.storage.sync.set(data);
+	  chrome.storage.sync.set({ 'addresses': data });
 	};
 
 /***/ },
@@ -26081,9 +26085,9 @@
 	
 	var _reactRedux = __webpack_require__(310);
 	
-	var _app_container = __webpack_require__(319);
+	var _app = __webpack_require__(320);
 	
-	var _app_container2 = _interopRequireDefault(_app_container);
+	var _app2 = _interopRequireDefault(_app);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -26092,7 +26096,7 @@
 	  return _react2.default.createElement(
 	    _reactRedux.Provider,
 	    { store: store },
-	    _react2.default.createElement(_app_container2.default, null)
+	    _react2.default.createElement(_app2.default, null)
 	  );
 	};
 	
@@ -26811,30 +26815,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 319 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _reactRedux = __webpack_require__(310);
-	
-	var _app = __webpack_require__(320);
-	
-	var _app2 = _interopRequireDefault(_app);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var mapStateToProps = function mapStateToProps(state) {
-	  return { addresses: state['StatsReducer'] };
-	};
-	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, null)(_app2.default);
-
-/***/ },
+/* 319 */,
 /* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -26848,9 +26829,9 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _stats_container = __webpack_require__(321);
+	var _address_container = __webpack_require__(321);
 	
-	var _stats_container2 = _interopRequireDefault(_stats_container);
+	var _address_container2 = _interopRequireDefault(_address_container);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -26865,7 +26846,7 @@
 	      null,
 	      'StreetCleaningSF'
 	    ),
-	    _react2.default.createElement(_stats_container2.default, null)
+	    _react2.default.createElement(_address_container2.default, null)
 	  );
 	};
 	
@@ -26885,9 +26866,9 @@
 	
 	var _stats_actions = __webpack_require__(189);
 	
-	var _stats = __webpack_require__(322);
+	var _address = __webpack_require__(322);
 	
-	var _stats2 = _interopRequireDefault(_stats);
+	var _address2 = _interopRequireDefault(_address);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -26906,7 +26887,7 @@
 	  };
 	};
 	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_stats2.default);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_address2.default);
 
 /***/ },
 /* 322 */
@@ -26934,15 +26915,15 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var Stats = function (_React$Component) {
-	  _inherits(Stats, _React$Component);
+	var Address = function (_React$Component) {
+	  _inherits(Address, _React$Component);
 	
-	  function Stats(props) {
-	    _classCallCheck(this, Stats);
+	  function Address(props) {
+	    _classCallCheck(this, Address);
 	
-	    var _this = _possibleConstructorReturn(this, (Stats.__proto__ || Object.getPrototypeOf(Stats)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Address.__proto__ || Object.getPrototypeOf(Address)).call(this, props));
 	
-	    _this.addresses = "";
+	    _this.addresses = [];
 	    _this.state = {
 	      showAddressInput: false,
 	      showAddressInputLink: true,
@@ -26951,11 +26932,12 @@
 	
 	    _this.showAddressInput = _this.showAddressInput.bind(_this);
 	    _this.submitAddress = _this.submitAddress.bind(_this);
-	    _this.setStats = _this.setStats.bind(_this);
+	    _this.setupChromeSync = _this.setupChromeSync.bind(_this);
+	    _this.setAddresses = _this.setAddresses.bind(_this);
 	    return _this;
 	  }
 	
-	  _createClass(Stats, [{
+	  _createClass(Address, [{
 	    key: "componentDidMount",
 	    value: function componentDidMount() {
 	      this.props.getChromeSync();
@@ -26963,24 +26945,27 @@
 	  }, {
 	    key: "componentDidUpdate",
 	    value: function componentDidUpdate() {
-	      this.setStats();
+	      this.setupChromeSync();
+	      this.setAddresses();
 	    }
 	  }, {
-	    key: "setStats",
-	    value: function setStats() {
+	    key: "setupChromeSync",
+	    value: function setupChromeSync() {
 	      if (this.props.addresses === undefined) {
-	        this.props.setChromeSync({ 'addresses': [] });
-	        this.addresses = [];
-	      } else {
-	        this.addresses = this.props.addresses;
+	        this.props.setChromeSync([]);
 	      }
+	    }
+	  }, {
+	    key: "setAddresses",
+	    value: function setAddresses() {
+	      this.addresses = this.props.addresses;
 	    }
 	  }, {
 	    key: "submitAddress",
 	    value: function submitAddress(e) {
 	      e.preventDefault();
 	      this.addresses.push(this.state.inputAddress);
-	      this.props.setChromeSync({ 'addresses': this.addresses });
+	      this.props.setChromeSync(this.addresses);
 	      this.setState({ showAddressInput: false,
 	        showAddressInputLink: true,
 	        inputAddress: "" });
@@ -27068,7 +27053,6 @@
 	            "div",
 	            null,
 	            this.renderAddresses(this.props.addresses),
-	            "Next Cleaning Schedule:",
 	            this.addressesInputLink(),
 	            this.addressInput()
 	          )
@@ -27077,10 +27061,10 @@
 	    }
 	  }]);
 	
-	  return Stats;
+	  return Address;
 	}(_react2.default.Component);
 	
-	exports.default = Stats;
+	exports.default = Address;
 
 /***/ }
 /******/ ]);

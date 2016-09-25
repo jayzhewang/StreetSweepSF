@@ -3,5 +3,5 @@ export const getChromeSyncAPI = successFunction => {
 };
 
 export const setChromeSyncAPI = (data) => {
-  chrome.storage.sync.set(data);
+  chrome.storage.sync.set({'addresses': data});
 };

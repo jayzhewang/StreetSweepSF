@@ -1,9 +1,9 @@
 import React from 'react';
 
-class Stats extends React.Component {
+class Address extends React.Component {
   constructor(props){
     super(props);
-    this.addresses = "";
+    this.addresses = [];
     this.state = {
       showAddressInput: false,
       showAddressInputLink: true,
@@ -12,7 +12,8 @@ class Stats extends React.Component {
 
     this.showAddressInput = this.showAddressInput.bind(this);
     this.submitAddress = this.submitAddress.bind(this);
-    this.setStats = this.setStats.bind(this);
+    this.setupChromeSync = this.setupChromeSync.bind(this);
+    this.setAddresses = this.setAddresses.bind(this);
   }
 
   componentDidMount(){
@@ -20,22 +21,24 @@ class Stats extends React.Component {
   }
 
   componentDidUpdate(){
-    this.setStats();
+    this.setupChromeSync();
+    this.setAddresses();
   }
 
-  setStats(){
+  setupChromeSync(){
     if(this.props.addresses === undefined){
-      this.props.setChromeSync({'addresses': []});
-      this.addresses = [];
-    } else {
-      this.addresses = this.props.addresses;
+      this.props.setChromeSync([]);
     }
+  }
+
+  setAddresses(){
+    this.addresses = this.props.addresses;
   }
 
   submitAddress(e){
     e.preventDefault();
     this.addresses.push(this.state.inputAddress);
-    this.props.setChromeSync({'addresses': this.addresses});
+    this.props.setChromeSync(this.addresses);
     this.setState({showAddressInput: false,
                    showAddressInputLink: true,
                    inputAddress: ""});
@@ -105,8 +108,6 @@ class Stats extends React.Component {
         <div>
           <div>
             {this.renderAddresses(this.props.addresses)}
-            Next Cleaning Schedule:
-
             {this.addressesInputLink()}
             {this.addressInput()}
           </div>
@@ -116,4 +117,4 @@ class Stats extends React.Component {
   }
 }
 
-export default Stats;
+export default Address;

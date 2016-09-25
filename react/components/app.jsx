@@ -1,11 +1,11 @@
 import React from 'react';
-import StatsContainer from './stats/stats_container';
+import AddressContainer from './address/address_container';
 
 const App = ({children}) => {
   return (
     <div>
       <h1>StreetCleaningSF</h1>
-      <StatsContainer />
+      <AddressContainer />
     </div>
   );
 };
