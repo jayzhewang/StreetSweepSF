@@ -22341,14 +22341,14 @@
 	
 	var _redux = __webpack_require__(173);
 	
-	var _stats_reducer = __webpack_require__(188);
+	var _address_reducer = __webpack_require__(188);
 	
-	var _stats_reducer2 = _interopRequireDefault(_stats_reducer);
+	var _address_reducer2 = _interopRequireDefault(_address_reducer);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var RootReducer = (0, _redux.combineReducers)({
-	  StatsReducer: _stats_reducer2.default
+	  AddressReducer: _address_reducer2.default
 	});
 	
 	exports.default = RootReducer;
@@ -22363,7 +22363,7 @@
 	  value: true
 	});
 	
-	var _stats_actions = __webpack_require__(189);
+	var _address_actions = __webpack_require__(189);
 	
 	var _merge = __webpack_require__(190);
 	
@@ -22371,12 +22371,12 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var StatsReducer = function StatsReducer() {
+	var AddressReducer = function AddressReducer() {
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 	  var action = arguments[1];
 	
 	  switch (action.type) {
-	    case _stats_actions.StatsConstants.RECEIVE_CHROME_SYNC:
+	    case _address_actions.AddressConstants.RECEIVE_CHROME_SYNC:
 	      var storage = action.obj.addresses;
 	      if (storage === undefined) {
 	        return state;
@@ -22388,7 +22388,7 @@
 	  }
 	};
 	
-	exports.default = StatsReducer;
+	exports.default = AddressReducer;
 
 /***/ },
 /* 189 */
@@ -22399,7 +22399,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var StatsConstants = exports.StatsConstants = {
+	var AddressConstants = exports.AddressConstants = {
 	  GET_CHROME_SYNC: 'REQUEST_CHROME_SYNC',
 	  SET_CHROME_SYNC: 'SET_CHROME_SYNC',
 	  RECEIVE_CHROME_SYNC: 'RECEIVE_CHROME_SYNC'
@@ -22407,20 +22407,20 @@
 	
 	var getChromeSync = exports.getChromeSync = function getChromeSync() {
 	  return {
-	    type: StatsConstants.GET_CHROME_SYNC
+	    type: AddressConstants.GET_CHROME_SYNC
 	  };
 	};
 	
 	var setChromeSync = exports.setChromeSync = function setChromeSync(data) {
 	  return {
-	    type: StatsConstants.SET_CHROME_SYNC,
+	    type: AddressConstants.SET_CHROME_SYNC,
 	    data: data
 	  };
 	};
 	
 	var receiveChromeSync = exports.receiveChromeSync = function receiveChromeSync(obj) {
 	  return {
-	    type: StatsConstants.RECEIVE_CHROME_SYNC,
+	    type: AddressConstants.RECEIVE_CHROME_SYNC,
 	    obj: obj
 	  };
 	};
@@ -26002,13 +26002,13 @@
 	
 	var _redux = __webpack_require__(173);
 	
-	var _stats_middleware = __webpack_require__(307);
+	var _address_middleware = __webpack_require__(307);
 	
-	var _stats_middleware2 = _interopRequireDefault(_stats_middleware);
+	var _address_middleware2 = _interopRequireDefault(_address_middleware);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var RootMiddleware = (0, _redux.applyMiddleware)(_stats_middleware2.default);
+	var RootMiddleware = (0, _redux.applyMiddleware)(_address_middleware2.default);
 	
 	exports.default = RootMiddleware;
 
@@ -26022,26 +26022,26 @@
 	  value: true
 	});
 	
-	var _stats_actions = __webpack_require__(189);
+	var _address_actions = __webpack_require__(189);
 	
-	var _stats_api_util = __webpack_require__(308);
+	var _address_api_util = __webpack_require__(308);
 	
-	var StatsMiddleware = function StatsMiddleware(_ref) {
+	var AddressMiddleware = function AddressMiddleware(_ref) {
 	  var getState = _ref.getState;
 	  var dispatch = _ref.dispatch;
 	  return function (next) {
 	    return function (action) {
 	      switch (action.type) {
-	        case _stats_actions.StatsConstants.GET_CHROME_SYNC:
+	        case _address_actions.AddressConstants.GET_CHROME_SYNC:
 	          var success = function success(obj) {
-	            dispatch((0, _stats_actions.receiveChromeSync)(obj));
+	            dispatch((0, _address_actions.receiveChromeSync)(obj));
 	          };
 	
-	          (0, _stats_api_util.getChromeSyncAPI)(success);
+	          (0, _address_api_util.getChromeSyncAPI)(success);
 	          return next(action);
-	        case _stats_actions.StatsConstants.SET_CHROME_SYNC:
+	        case _address_actions.AddressConstants.SET_CHROME_SYNC:
 	          var data = action.data;
-	          (0, _stats_api_util.setChromeSyncAPI)(data);
+	          (0, _address_api_util.setChromeSyncAPI)(data);
 	          return next(action);
 	        default:
 	          return next(action);
@@ -26050,7 +26050,7 @@
 	  };
 	};
 	
-	exports.default = StatsMiddleware;
+	exports.default = AddressMiddleware;
 
 /***/ },
 /* 308 */
@@ -26085,7 +26085,7 @@
 	
 	var _reactRedux = __webpack_require__(310);
 	
-	var _app = __webpack_require__(320);
+	var _app = __webpack_require__(319);
 	
 	var _app2 = _interopRequireDefault(_app);
 	
@@ -26815,8 +26815,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 319 */,
-/* 320 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26829,7 +26828,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _address_container = __webpack_require__(321);
+	var _address_container = __webpack_require__(320);
 	
 	var _address_container2 = _interopRequireDefault(_address_container);
 	
@@ -26853,7 +26852,7 @@
 	exports.default = App;
 
 /***/ },
-/* 321 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26864,25 +26863,25 @@
 	
 	var _reactRedux = __webpack_require__(310);
 	
-	var _stats_actions = __webpack_require__(189);
+	var _address_actions = __webpack_require__(189);
 	
-	var _address = __webpack_require__(322);
+	var _address = __webpack_require__(321);
 	
 	var _address2 = _interopRequireDefault(_address);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var mapStateToProps = function mapStateToProps(state) {
-	  return { addresses: state['StatsReducer'] };
+	  return { addresses: state['AddressReducer'] };
 	};
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
 	    getChromeSync: function getChromeSync() {
-	      return dispatch((0, _stats_actions.getChromeSync)());
+	      return dispatch((0, _address_actions.getChromeSync)());
 	    },
 	    setChromeSync: function setChromeSync(change) {
-	      return dispatch((0, _stats_actions.setChromeSync)(change));
+	      return dispatch((0, _address_actions.setChromeSync)(change));
 	    }
 	  };
 	};
@@ -26890,7 +26889,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_address2.default);
 
 /***/ },
-/* 322 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

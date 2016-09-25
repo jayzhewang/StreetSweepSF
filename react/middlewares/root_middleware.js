@@ -1,8 +1,8 @@
 import { applyMiddleware } from 'redux';
-import StatsMiddleware from './stats_middleware';
+import AddressMiddleware from './address_middleware';
 
 const RootMiddleware = applyMiddleware(
-  StatsMiddleware
+  AddressMiddleware
 );
 
 export default RootMiddleware;

@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
 import { getChromeSync,
-         setChromeSync } from '../../actions/stats_actions';
+         setChromeSync } from '../../actions/address_actions';
 
 import Address from './address';
 
 const mapStateToProps = state => {
-  return { addresses: state['StatsReducer'] };
+  return { addresses: state['AddressReducer'] };
 };
 
 const mapDispatchToProps = dispatch => ({

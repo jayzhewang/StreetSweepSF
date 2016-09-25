@@ -1,9 +1,9 @@
-import { StatsConstants } from '../actions/stats_actions';
+import { AddressConstants } from '../actions/address_actions';
 import merge from 'lodash/merge';
 
-const StatsReducer = (state = [], action) => {
+const AddressReducer = (state = [], action) => {
   switch(action.type){
-    case StatsConstants.RECEIVE_CHROME_SYNC:
+    case AddressConstants.RECEIVE_CHROME_SYNC:
       const storage = action.obj.addresses;
       if(storage === undefined){
         return state;
@@ -15,4 +15,4 @@ const StatsReducer = (state = [], action) => {
   }
 };
 
-export default StatsReducer;
+export default AddressReducer;
