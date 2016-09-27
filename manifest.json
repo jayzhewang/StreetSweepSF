@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "StreetCleaningSF",
+  "name": "StreetSweepSF",
   "version": "1.0",
 
   "description": "Your Street Cleaning Reminder",
@@ -19,10 +19,14 @@
     "default_popup": "popup.html"
   },
 
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://maps.googleapis.com/; object-src 'self'",
+
   "permissions": [
     "alarms",
     "storage",
     "notifications",
-    "https://ajax.googleapis.com/"
+    "https://ajax.googleapis.com/",
+    "https://maps.googleapis.com/",
+    "*://*/*"
   ]
 }

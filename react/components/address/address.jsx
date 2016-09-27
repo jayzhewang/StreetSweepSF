@@ -1,4 +1,5 @@
 import React from 'react';
+import Map from '../map/map';
 
 class Address extends React.Component {
   constructor(props){
@@ -7,11 +8,14 @@ class Address extends React.Component {
     this.state = {
       showAddressInput: false,
       showAddressInputLink: true,
-      inputAddress: ""
+      showMap: false,
+      mapCoords: "",
+      inputAddress: "",
     };
 
     this.showAddressInput = this.showAddressInput.bind(this);
     this.submitAddress = this.submitAddress.bind(this);
+    this.removeAddress = this.removeAddress.bind(this);
     this.setupChromeSync = this.setupChromeSync.bind(this);
     this.setAddresses = this.setAddresses.bind(this);
   }
@@ -44,6 +48,14 @@ class Address extends React.Component {
                    inputAddress: ""});
   }
 
+  removeAddress(address, e){
+    e.preventDefault();
+    let idx = this.addresses.indexOf(address);
+    this.addresses.splice(idx, 1);
+    this.props.setChromeSync(this.addresses);
+    this.setState(this.state);
+  }
+
   showAddressInput(){
     this.setState({ showAddressInput: true,
                     showAddressInputLink: false });
@@ -60,9 +72,12 @@ class Address extends React.Component {
           <input type='text'
                  placeholder='Input address here'
                  value={this.state.inputAddress}
-                 onChange={this.update('inputAddress')} />
+                 onChange={this.update('inputAddress')}
+                 className='address-input-box-input'/>
 
-          <input type='submit' value='Add'/>
+          <input type='submit'
+                 value='+'
+                 className='address-input-box-submit'/>
         </form>
       );
     }
@@ -72,7 +87,7 @@ class Address extends React.Component {
     if(this.state.showAddressInputLink === true){
       return (
         <div onClick={this.showAddressInput}>
-          Input addresses
+          Add Address
         </div>
       );
     }
@@ -86,9 +101,27 @@ class Address extends React.Component {
     } else {
       let addressArr = addresses.map((address, i)=>{
         return(
-          <li type='disc' key={`address${i}`}>
-            {address}
-          </li>
+          <div className='address-list-container' key={`address${i}`}>
+            <div className='list-container'>
+              <li type='circle' >
+                {address}
+              </li>
+            </div>
+
+            <div className='close-icon-container'>
+              <img src='../../../assets/icons/close-icon.png'
+                onClick={(e)=>this.removeAddress(address, e)}
+                height='17'
+                width='17'/>
+            </div>
+
+            <div>
+              <img src='../../../assets/icons/map-icon.png'
+                   onClick={(e)=>this.toggleMap(address, e)}
+                   height='17'
+                   width='17'/>
+            </div>
+          </div>
         );
       });
 
@@ -96,6 +129,17 @@ class Address extends React.Component {
         <ul>{addressArr}</ul>
       );
     }
+  }
+
+  toggleMap(address, e){
+    e.preventDefault();
+    this.setState({mapAdress: address});
+  }
+
+  showMap(){
+    return (
+      <Map position={[37.7749, -122.4194]} />
+    );
   }
 
   render(){
@@ -107,10 +151,18 @@ class Address extends React.Component {
       return (
         <div>
           <div>
-            {this.renderAddresses(this.props.addresses)}
-            {this.addressesInputLink()}
-            {this.addressInput()}
+            <div className='address-list'>
+              {this.renderAddresses(this.props.addresses)}
+            </div>
+            <div className='address-input-link'>
+              {this.addressesInputLink()}
+            </div>
+            <div className='address-input-box'>
+              {this.addressInput()}
+            </div>
           </div>
+
+          {this.showMap()}
         </div>
       );
     }

@@ -1,0 +1,74 @@
+.address-list {
+  font-size: 12px;
+  background: #DFF0D8;
+  margin-bottom: 10px;
+  border-top: 1px solid #b2dba1;
+  border-bottom: 1px solid #b2dba1;
+}
+
+.address-list > ul {
+  margin: 0;
+  padding: 0 25px;
+}
+
+.address-list-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.list-container {
+  font-size: 14px;
+}
+
+.close-icon-container {
+  margin-left: 5px;
+  display: block;
+}
+
+.close-icon-container > img:hover {
+  cursor: pointer;
+}
+
+.address-list > div {
+  font-size: 16px;
+  padding: 10px 25px
+}
+
+.address-input-link {
+  margin-bottom: 10px;
+}
+
+.address-input-link > div {
+  padding-left: 10px;
+}
+
+.address-input-link > div:hover{
+  cursor: pointer;
+  background: #DFF0D8;
+}
+
+.address-input-box {
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.address-input-box-input {
+  border: 1px solid #b2dba1;
+}
+
+.address-input-box-submit {
+  padding: 0 5px;
+  background: #DFF0D8;
+  margin-left: 10px;
+  border-radius: 5px;
+  border: 1px solid #b2dba1;
+  color: #808080;
+}
+
+.address-input-box-submit:hover {
+  cursor: pointer;
+}
+
+*::-webkit-input-placeholder {
+    font-size: 14px;
+}

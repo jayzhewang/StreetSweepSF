@@ -26839,11 +26839,21 @@
 	
 	  return _react2.default.createElement(
 	    'div',
-	    null,
+	    { className: 'app' },
 	    _react2.default.createElement(
-	      'h1',
-	      null,
-	      'StreetCleaningSF'
+	      'div',
+	      { className: 'app-title group' },
+	      _react2.default.createElement('img', { src: '../../assets/icons/broom-38.png', alt: 'broom' }),
+	      _react2.default.createElement(
+	        'h1',
+	        null,
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          'SS'
+	        ),
+	        'SF'
+	      )
 	    ),
 	    _react2.default.createElement(_address_container2.default, null)
 	  );
@@ -26892,7 +26902,7 @@
 /* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -26903,6 +26913,10 @@
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _map = __webpack_require__(322);
+	
+	var _map2 = _interopRequireDefault(_map);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -26926,41 +26940,44 @@
 	    _this.state = {
 	      showAddressInput: false,
 	      showAddressInputLink: true,
+	      showMap: false,
+	      mapCoords: "",
 	      inputAddress: ""
 	    };
 	
 	    _this.showAddressInput = _this.showAddressInput.bind(_this);
 	    _this.submitAddress = _this.submitAddress.bind(_this);
+	    _this.removeAddress = _this.removeAddress.bind(_this);
 	    _this.setupChromeSync = _this.setupChromeSync.bind(_this);
 	    _this.setAddresses = _this.setAddresses.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(Address, [{
-	    key: "componentDidMount",
+	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.props.getChromeSync();
 	    }
 	  }, {
-	    key: "componentDidUpdate",
+	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate() {
 	      this.setupChromeSync();
 	      this.setAddresses();
 	    }
 	  }, {
-	    key: "setupChromeSync",
+	    key: 'setupChromeSync',
 	    value: function setupChromeSync() {
 	      if (this.props.addresses === undefined) {
 	        this.props.setChromeSync([]);
 	      }
 	    }
 	  }, {
-	    key: "setAddresses",
+	    key: 'setAddresses',
 	    value: function setAddresses() {
 	      this.addresses = this.props.addresses;
 	    }
 	  }, {
-	    key: "submitAddress",
+	    key: 'submitAddress',
 	    value: function submitAddress(e) {
 	      e.preventDefault();
 	      this.addresses.push(this.state.inputAddress);
@@ -26970,13 +26987,22 @@
 	        inputAddress: "" });
 	    }
 	  }, {
-	    key: "showAddressInput",
+	    key: 'removeAddress',
+	    value: function removeAddress(address, e) {
+	      e.preventDefault();
+	      var idx = this.addresses.indexOf(address);
+	      this.addresses.splice(idx, 1);
+	      this.props.setChromeSync(this.addresses);
+	      this.setState(this.state);
+	    }
+	  }, {
+	    key: 'showAddressInput',
 	    value: function showAddressInput() {
 	      this.setState({ showAddressInput: true,
 	        showAddressInputLink: false });
 	    }
 	  }, {
-	    key: "update",
+	    key: 'update',
 	    value: function update(field) {
 	      var _this2 = this;
 	
@@ -26985,76 +27011,133 @@
 	      };
 	    }
 	  }, {
-	    key: "addressInput",
+	    key: 'addressInput',
 	    value: function addressInput() {
 	      if (this.state.showAddressInput === true) {
 	        return _react2.default.createElement(
-	          "form",
+	          'form',
 	          { onSubmit: this.submitAddress },
-	          _react2.default.createElement("input", { type: "text",
-	            placeholder: "Input address here",
+	          _react2.default.createElement('input', { type: 'text',
+	            placeholder: 'Input address here',
 	            value: this.state.inputAddress,
-	            onChange: this.update('inputAddress') }),
-	          _react2.default.createElement("input", { type: "submit", value: "Add" })
+	            onChange: this.update('inputAddress'),
+	            className: 'address-input-box-input' }),
+	          _react2.default.createElement('input', { type: 'submit',
+	            value: '+',
+	            className: 'address-input-box-submit' })
 	        );
 	      }
 	    }
 	  }, {
-	    key: "addressesInputLink",
+	    key: 'addressesInputLink',
 	    value: function addressesInputLink() {
 	      if (this.state.showAddressInputLink === true) {
 	        return _react2.default.createElement(
-	          "div",
+	          'div',
 	          { onClick: this.showAddressInput },
-	          "Input addresses"
+	          'Add Address'
 	        );
 	      }
 	    }
 	  }, {
-	    key: "renderAddresses",
+	    key: 'renderAddresses',
 	    value: function renderAddresses(addresses) {
+	      var _this3 = this;
+	
 	      if (addresses.length === 0 || addresses.length === undefined) {
 	        return _react2.default.createElement(
-	          "div",
+	          'div',
 	          null,
-	          "No addresses found!"
+	          'No addresses found!'
 	        );
 	      } else {
 	        var addressArr = addresses.map(function (address, i) {
 	          return _react2.default.createElement(
-	            "li",
-	            { type: "disc", key: "address" + i },
-	            address
+	            'div',
+	            { className: 'address-list-container', key: 'address' + i },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'list-container' },
+	              _react2.default.createElement(
+	                'li',
+	                { type: 'circle' },
+	                address
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'close-icon-container' },
+	              _react2.default.createElement('img', { src: '../../../assets/icons/close-icon.png',
+	                onClick: function onClick(e) {
+	                  return _this3.removeAddress(address, e);
+	                },
+	                height: '17',
+	                width: '17' })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement('img', { src: '../../../assets/icons/map-icon.png',
+	                onClick: function onClick(e) {
+	                  return _this3.toggleMap(address, e);
+	                },
+	                height: '17',
+	                width: '17' })
+	            )
 	          );
 	        });
 	
 	        return _react2.default.createElement(
-	          "ul",
+	          'ul',
 	          null,
 	          addressArr
 	        );
 	      }
 	    }
 	  }, {
-	    key: "render",
+	    key: 'toggleMap',
+	    value: function toggleMap(address, e) {
+	      e.preventDefault();
+	      this.setState({ mapAdress: address });
+	    }
+	  }, {
+	    key: 'showMap',
+	    value: function showMap() {
+	      return _react2.default.createElement(_map2.default, { position: [37.7749, -122.4194] });
+	    }
+	  }, {
+	    key: 'render',
 	    value: function render() {
 	      if (this.props.addresses === undefined) {
 	        return _react2.default.createElement(
-	          "div",
+	          'div',
 	          null,
-	          "Loading..."
+	          'Loading...'
 	        );
 	      } else {
 	        return _react2.default.createElement(
-	          "div",
+	          'div',
 	          null,
 	          _react2.default.createElement(
-	            "div",
+	            'div',
 	            null,
-	            this.renderAddresses(this.props.addresses),
-	            this.addressesInputLink(),
-	            this.addressInput()
-	          )
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'address-list' },
+	              this.renderAddresses(this.props.addresses)
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'address-input-link' },
+	              this.addressesInputLink()
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'address-input-box' },
+	              this.addressInput()
+	            )
+	          ),
+	          this.showMap()
 	        );
 	      }
 	    }
@@ -27064,6 +27147,73 @@
 	}(_react2.default.Component);
 	
 	exports.default = Address;
+
+/***/ },
+/* 322 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Map = function (_React$Component) {
+	  _inherits(Map, _React$Component);
+	
+	  function Map() {
+	    _classCallCheck(this, Map);
+	
+	    return _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).apply(this, arguments));
+	  }
+	
+	  _createClass(Map, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var mapDOMNode = this.refs.map;
+	      var coord = this.props.position;
+	      var mapOptions = {
+	        center: { lat: coord[0], lng: coord[1] },
+	        zoom: 13
+	      };
+	
+	      this.map = new google.maps.Map(mapDOMNode, mapOptions);
+	
+	      var marker = new google.maps.Marker({
+	        position: { lat: coord[0], lng: coord[1] },
+	        map: this.map,
+	        title: 'Hello World!'
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement('div', { className: 'map', ref: 'map' })
+	      );
+	    }
+	  }]);
+	
+	  return Map;
+	}(_react2.default.Component);
+	
+	exports.default = Map;
 
 /***/ }
 /******/ ]);
