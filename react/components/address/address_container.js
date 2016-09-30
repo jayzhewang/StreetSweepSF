@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
+import Address from './address';
 import { getChromeSync,
          setChromeSync } from '../../actions/address_actions';
 
-import Address from './address';
 
 const mapStateToProps = state => {
   return { addresses: state.addresses };

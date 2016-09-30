@@ -2,7 +2,7 @@ import { AddressConstants,
          receiveChromeSync } from '../actions/address_actions';
 
 import { getChromeSyncAPI,
-         setChromeSyncAPI } from '../util/address_api_util';
+         setChromeSyncAPI } from '../util/chrome_api_util';
 
 const AddressMiddleware = ({getState, dispatch}) => next => action => {
   switch(action.type){

@@ -1,24 +1,30 @@
 import React from 'react';
 import Map from '../map/map';
+import ScheduleContainer from '../schedule/schedule_container';
 
 class Address extends React.Component {
   constructor(props){
     super(props);
     this.addresses = [];
     this.state = {
+      showSchedules: false,
+      showSchedulesLink: true,
       showAddressInput: false,
       showAddressInputLink: true,
       showMap: false,
-      mapCoords: "",
+      mapCoords: [37.7749, -122.4194],
       inputAddress: "",
     };
 
     this.showAddressInput = this.showAddressInput.bind(this);
+    this.showSchedules = this.showSchedules.bind(this);
     this.submitAddress = this.submitAddress.bind(this);
     this.removeAddress = this.removeAddress.bind(this);
     this.setupChromeSync = this.setupChromeSync.bind(this);
     this.setAddresses = this.setAddresses.bind(this);
   }
+
+//Lifecycle-------------------------------------------------------------
 
   componentDidMount(){
     this.props.getChromeSync();
@@ -34,6 +40,8 @@ class Address extends React.Component {
       this.props.setChromeSync([]);
     }
   }
+
+//Chrome----------------------------------------------------------------
 
   setAddresses(){
     this.addresses = this.props.addresses;
@@ -53,16 +61,25 @@ class Address extends React.Component {
     let idx = this.addresses.indexOf(address);
     this.addresses.splice(idx, 1);
     this.props.setChromeSync(this.addresses);
-    this.setState(this.state);
+    this.setState({showSchedules: false,
+                   showSchedulesLink: true});
   }
+
+//Address---------------------------------------------------------------
 
   showAddressInput(){
     this.setState({ showAddressInput: true,
                     showAddressInputLink: false });
   }
 
-  update(field){
-    return e => { this.setState({[field]: e.currentTarget.value }); };
+  addressesInputLink(){
+    if(this.state.showAddressInputLink === true){
+      return (
+        <div onClick={this.showAddressInput}>
+          Add Address
+        </div>
+      );
+    }
   }
 
   addressInput(){
@@ -79,16 +96,6 @@ class Address extends React.Component {
                  value='+'
                  className='address-input-box-submit'/>
         </form>
-      );
-    }
-  }
-
-  addressesInputLink(){
-    if(this.state.showAddressInputLink === true){
-      return (
-        <div onClick={this.showAddressInput}>
-          Add Address
-        </div>
       );
     }
   }
@@ -131,6 +138,38 @@ class Address extends React.Component {
     }
   }
 
+//Schedules-------------------------------------------------------------
+
+  schedules(){
+    if(this.state.showSchedules === true){
+      return(
+        <div className='schedules-list'>
+          <ScheduleContainer addresses={this.addresses}/>
+        </div>
+      );
+    }
+  }
+
+  showSchedules(){
+    this.setState({ showSchedulesLink: false,
+                    showSchedules: true });
+  }
+
+  schedulesLink(){
+    if(this.state.showSchedulesLink === true &&
+       this.props.addresses.length !== 0){
+      return(
+        <div onClick={this.showSchedules} className='schedules-get'>
+          <div>
+            Get schedules!
+          </div>
+        </div>
+      );
+    }
+  }
+
+//Map-------------------------------------------------------------------
+
   toggleMap(address, e){
     e.preventDefault();
     this.setState({mapAdress: address});
@@ -138,8 +177,14 @@ class Address extends React.Component {
 
   showMap(){
     return (
-      <Map position={[37.7749, -122.4194]} />
+      <Map position={this.state.mapCoords} />
     );
+  }
+
+//MISC------------------------------------------------------------------
+
+  update(field){
+    return e => { this.setState({[field]: e.currentTarget.value }); };
   }
 
   render(){
@@ -154,6 +199,8 @@ class Address extends React.Component {
             <div className='address-list'>
               {this.renderAddresses(this.props.addresses)}
             </div>
+              {this.schedulesLink()}
+              {this.schedules()}
             <div className='address-input-link'>
               {this.addressesInputLink()}
             </div>

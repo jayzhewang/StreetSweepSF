@@ -58,7 +58,7 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _root = __webpack_require__(309);
+	var _root = __webpack_require__(313);
 	
 	var _root2 = _interopRequireDefault(_root);
 	
@@ -21453,7 +21453,7 @@
 	
 	var _root_reducer2 = _interopRequireDefault(_root_reducer);
 	
-	var _root_middleware = __webpack_require__(306);
+	var _root_middleware = __webpack_require__(308);
 	
 	var _root_middleware2 = _interopRequireDefault(_root_middleware);
 	
@@ -22345,10 +22345,15 @@
 	
 	var _address_reducer2 = _interopRequireDefault(_address_reducer);
 	
+	var _schedule_reducer = __webpack_require__(306);
+	
+	var _schedule_reducer2 = _interopRequireDefault(_schedule_reducer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var RootReducer = (0, _redux.combineReducers)({
-	  addresses: _address_reducer2.default
+	  addresses: _address_reducer2.default,
+	  schedules: _schedule_reducer2.default
 	});
 	
 	exports.default = RootReducer;
@@ -26000,20 +26005,86 @@
 	  value: true
 	});
 	
-	var _redux = __webpack_require__(173);
+	var _schedule_actions = __webpack_require__(307);
 	
-	var _address_middleware = __webpack_require__(307);
+	var _merge = __webpack_require__(190);
 	
-	var _address_middleware2 = _interopRequireDefault(_address_middleware);
+	var _merge2 = _interopRequireDefault(_merge);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var RootMiddleware = (0, _redux.applyMiddleware)(_address_middleware2.default);
+	var ScheduleReducer = function ScheduleReducer() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case _schedule_actions.ScheduleConstants.RECEIVE_SCHEDULE:
+	      var schedules = action.scheduleArr;
+	
+	      return (0, _merge2.default)([], state, schedules);
+	    default:
+	      return state;
+	  }
+	};
+	
+	exports.default = ScheduleReducer;
+
+/***/ },
+/* 307 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var ScheduleConstants = exports.ScheduleConstants = {
+	  REQUEST_SCHEDULE: 'REQUEST_SCHEDULE',
+	  RECEIVE_SCHEDULE: 'RECEIVE_SCHEDULE'
+	};
+	
+	var requestSchedule = exports.requestSchedule = function requestSchedule(address) {
+	  return {
+	    type: ScheduleConstants.REQUEST_SCHEDULE,
+	    address: address
+	  };
+	};
+	
+	var receiveSchedule = exports.receiveSchedule = function receiveSchedule(scheduleArr) {
+	  return {
+	    type: ScheduleConstants.RECEIVE_SCHEDULE,
+	    scheduleArr: scheduleArr
+	  };
+	};
+
+/***/ },
+/* 308 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _redux = __webpack_require__(173);
+	
+	var _address_middleware = __webpack_require__(309);
+	
+	var _address_middleware2 = _interopRequireDefault(_address_middleware);
+	
+	var _schedule_middleware = __webpack_require__(311);
+	
+	var _schedule_middleware2 = _interopRequireDefault(_schedule_middleware);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var RootMiddleware = (0, _redux.applyMiddleware)(_address_middleware2.default, _schedule_middleware2.default);
 	
 	exports.default = RootMiddleware;
 
 /***/ },
-/* 307 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26024,7 +26095,7 @@
 	
 	var _address_actions = __webpack_require__(189);
 	
-	var _address_api_util = __webpack_require__(308);
+	var _chrome_api_util = __webpack_require__(310);
 	
 	var AddressMiddleware = function AddressMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -26037,11 +26108,11 @@
 	            dispatch((0, _address_actions.receiveChromeSync)(obj));
 	          };
 	
-	          (0, _address_api_util.getChromeSyncAPI)(success);
+	          (0, _chrome_api_util.getChromeSyncAPI)(success);
 	          return next(action);
 	        case _address_actions.AddressConstants.SET_CHROME_SYNC:
 	          var data = action.data;
-	          (0, _address_api_util.setChromeSyncAPI)(data);
+	          (0, _chrome_api_util.setChromeSyncAPI)(data);
 	          return next(action);
 	        default:
 	          return next(action);
@@ -26053,7 +26124,7 @@
 	exports.default = AddressMiddleware;
 
 /***/ },
-/* 308 */
+/* 310 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26070,7 +26141,64 @@
 	};
 
 /***/ },
-/* 309 */
+/* 311 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _schedule_actions = __webpack_require__(307);
+	
+	var _chrome_api_util = __webpack_require__(310);
+	
+	var _rails_api_util = __webpack_require__(312);
+	
+	var ScheduleMiddleware = function ScheduleMiddleware(_ref) {
+	  var getState = _ref.getState;
+	  var dispatch = _ref.dispatch;
+	  return function (next) {
+	    return function (action) {
+	      switch (action.type) {
+	        case _schedule_actions.ScheduleConstants.REQUEST_SCHEDULE:
+	          var success = function success(scheduleArr) {
+	            return dispatch((0, _schedule_actions.receiveSchedule)(scheduleArr));
+	          };
+	          var address = action.address;
+	
+	          (0, _rails_api_util.fetchSchedules)(address, success);
+	          return next(action);
+	        default:
+	          return next(action);
+	      }
+	    };
+	  };
+	};
+	
+	exports.default = ScheduleMiddleware;
+
+/***/ },
+/* 312 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var fetchSchedules = exports.fetchSchedules = function fetchSchedules(address, success) {
+	  $.ajax({
+	    method: 'GET',
+	    url: 'https://sssf.herokuapp.com/schedules/',
+	    data: { address: address },
+	    success: success
+	  });
+	};
+
+/***/ },
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26083,9 +26211,9 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactRedux = __webpack_require__(310);
+	var _reactRedux = __webpack_require__(314);
 	
-	var _app = __webpack_require__(319);
+	var _app = __webpack_require__(323);
 	
 	var _app2 = _interopRequireDefault(_app);
 	
@@ -26103,7 +26231,7 @@
 	exports.default = Root;
 
 /***/ },
-/* 310 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26111,11 +26239,11 @@
 	exports.__esModule = true;
 	exports.connect = exports.Provider = undefined;
 	
-	var _Provider = __webpack_require__(311);
+	var _Provider = __webpack_require__(315);
 	
 	var _Provider2 = _interopRequireDefault(_Provider);
 	
-	var _connect = __webpack_require__(314);
+	var _connect = __webpack_require__(318);
 	
 	var _connect2 = _interopRequireDefault(_connect);
 	
@@ -26125,7 +26253,7 @@
 	exports.connect = _connect2["default"];
 
 /***/ },
-/* 311 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26135,11 +26263,11 @@
 	
 	var _react = __webpack_require__(1);
 	
-	var _storeShape = __webpack_require__(312);
+	var _storeShape = __webpack_require__(316);
 	
 	var _storeShape2 = _interopRequireDefault(_storeShape);
 	
-	var _warning = __webpack_require__(313);
+	var _warning = __webpack_require__(317);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -26209,7 +26337,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 312 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26225,7 +26353,7 @@
 	});
 
 /***/ },
-/* 313 */
+/* 317 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26254,7 +26382,7 @@
 	}
 
 /***/ },
-/* 314 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26266,19 +26394,19 @@
 	
 	var _react = __webpack_require__(1);
 	
-	var _storeShape = __webpack_require__(312);
+	var _storeShape = __webpack_require__(316);
 	
 	var _storeShape2 = _interopRequireDefault(_storeShape);
 	
-	var _shallowEqual = __webpack_require__(315);
+	var _shallowEqual = __webpack_require__(319);
 	
 	var _shallowEqual2 = _interopRequireDefault(_shallowEqual);
 	
-	var _wrapActionCreators = __webpack_require__(316);
+	var _wrapActionCreators = __webpack_require__(320);
 	
 	var _wrapActionCreators2 = _interopRequireDefault(_wrapActionCreators);
 	
-	var _warning = __webpack_require__(313);
+	var _warning = __webpack_require__(317);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -26286,11 +26414,11 @@
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _hoistNonReactStatics = __webpack_require__(317);
+	var _hoistNonReactStatics = __webpack_require__(321);
 	
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 	
-	var _invariant = __webpack_require__(318);
+	var _invariant = __webpack_require__(322);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -26653,7 +26781,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 315 */
+/* 319 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26684,7 +26812,7 @@
 	}
 
 /***/ },
-/* 316 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26701,7 +26829,7 @@
 	}
 
 /***/ },
-/* 317 */
+/* 321 */
 /***/ function(module, exports) {
 
 	/**
@@ -26757,7 +26885,7 @@
 
 
 /***/ },
-/* 318 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26815,7 +26943,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 319 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26828,7 +26956,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _address_container = __webpack_require__(320);
+	var _address_container = __webpack_require__(324);
 	
 	var _address_container2 = _interopRequireDefault(_address_container);
 	
@@ -26862,7 +26990,7 @@
 	exports.default = App;
 
 /***/ },
-/* 320 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26871,13 +26999,13 @@
 	  value: true
 	});
 	
-	var _reactRedux = __webpack_require__(310);
+	var _reactRedux = __webpack_require__(314);
 	
-	var _address_actions = __webpack_require__(189);
-	
-	var _address = __webpack_require__(321);
+	var _address = __webpack_require__(325);
 	
 	var _address2 = _interopRequireDefault(_address);
+	
+	var _address_actions = __webpack_require__(189);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -26899,7 +27027,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_address2.default);
 
 /***/ },
-/* 321 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26914,9 +27042,13 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _map = __webpack_require__(322);
+	var _map = __webpack_require__(326);
 	
 	var _map2 = _interopRequireDefault(_map);
+	
+	var _schedule_container = __webpack_require__(327);
+	
+	var _schedule_container2 = _interopRequireDefault(_schedule_container);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -26938,20 +27070,25 @@
 	
 	    _this.addresses = [];
 	    _this.state = {
+	      showSchedules: false,
+	      showSchedulesLink: true,
 	      showAddressInput: false,
 	      showAddressInputLink: true,
 	      showMap: false,
-	      mapCoords: "",
+	      mapCoords: [37.7749, -122.4194],
 	      inputAddress: ""
 	    };
 	
 	    _this.showAddressInput = _this.showAddressInput.bind(_this);
+	    _this.showSchedules = _this.showSchedules.bind(_this);
 	    _this.submitAddress = _this.submitAddress.bind(_this);
 	    _this.removeAddress = _this.removeAddress.bind(_this);
 	    _this.setupChromeSync = _this.setupChromeSync.bind(_this);
 	    _this.setAddresses = _this.setAddresses.bind(_this);
 	    return _this;
 	  }
+	
+	  //Lifecycle-------------------------------------------------------------
 	
 	  _createClass(Address, [{
 	    key: 'componentDidMount',
@@ -26971,6 +27108,9 @@
 	        this.props.setChromeSync([]);
 	      }
 	    }
+	
+	    //Chrome----------------------------------------------------------------
+	
 	  }, {
 	    key: 'setAddresses',
 	    value: function setAddresses() {
@@ -26993,8 +27133,12 @@
 	      var idx = this.addresses.indexOf(address);
 	      this.addresses.splice(idx, 1);
 	      this.props.setChromeSync(this.addresses);
-	      this.setState(this.state);
+	      this.setState({ showSchedules: false,
+	        showSchedulesLink: true });
 	    }
+	
+	    //Address---------------------------------------------------------------
+	
 	  }, {
 	    key: 'showAddressInput',
 	    value: function showAddressInput() {
@@ -27002,13 +27146,15 @@
 	        showAddressInputLink: false });
 	    }
 	  }, {
-	    key: 'update',
-	    value: function update(field) {
-	      var _this2 = this;
-	
-	      return function (e) {
-	        _this2.setState(_defineProperty({}, field, e.currentTarget.value));
-	      };
+	    key: 'addressesInputLink',
+	    value: function addressesInputLink() {
+	      if (this.state.showAddressInputLink === true) {
+	        return _react2.default.createElement(
+	          'div',
+	          { onClick: this.showAddressInput },
+	          'Add Address'
+	        );
+	      }
 	    }
 	  }, {
 	    key: 'addressInput',
@@ -27029,20 +27175,9 @@
 	      }
 	    }
 	  }, {
-	    key: 'addressesInputLink',
-	    value: function addressesInputLink() {
-	      if (this.state.showAddressInputLink === true) {
-	        return _react2.default.createElement(
-	          'div',
-	          { onClick: this.showAddressInput },
-	          'Add Address'
-	        );
-	      }
-	    }
-	  }, {
 	    key: 'renderAddresses',
 	    value: function renderAddresses(addresses) {
-	      var _this3 = this;
+	      var _this2 = this;
 	
 	      if (addresses.length === 0 || addresses.length === undefined) {
 	        return _react2.default.createElement(
@@ -27069,7 +27204,7 @@
 	              { className: 'close-icon-container' },
 	              _react2.default.createElement('img', { src: '../../../assets/icons/close-icon.png',
 	                onClick: function onClick(e) {
-	                  return _this3.removeAddress(address, e);
+	                  return _this2.removeAddress(address, e);
 	                },
 	                height: '17',
 	                width: '17' })
@@ -27079,7 +27214,7 @@
 	              null,
 	              _react2.default.createElement('img', { src: '../../../assets/icons/map-icon.png',
 	                onClick: function onClick(e) {
-	                  return _this3.toggleMap(address, e);
+	                  return _this2.toggleMap(address, e);
 	                },
 	                height: '17',
 	                width: '17' })
@@ -27094,6 +27229,44 @@
 	        );
 	      }
 	    }
+	
+	    //Schedules-------------------------------------------------------------
+	
+	  }, {
+	    key: 'schedules',
+	    value: function schedules() {
+	      if (this.state.showSchedules === true) {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'schedules-list' },
+	          _react2.default.createElement(_schedule_container2.default, { addresses: this.addresses })
+	        );
+	      }
+	    }
+	  }, {
+	    key: 'showSchedules',
+	    value: function showSchedules() {
+	      this.setState({ showSchedulesLink: false,
+	        showSchedules: true });
+	    }
+	  }, {
+	    key: 'schedulesLink',
+	    value: function schedulesLink() {
+	      if (this.state.showSchedulesLink === true && this.props.addresses.length !== 0) {
+	        return _react2.default.createElement(
+	          'div',
+	          { onClick: this.showSchedules, className: 'schedules-get' },
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            'Get schedules!'
+	          )
+	        );
+	      }
+	    }
+	
+	    //Map-------------------------------------------------------------------
+	
 	  }, {
 	    key: 'toggleMap',
 	    value: function toggleMap(address, e) {
@@ -27103,7 +27276,19 @@
 	  }, {
 	    key: 'showMap',
 	    value: function showMap() {
-	      return _react2.default.createElement(_map2.default, { position: [37.7749, -122.4194] });
+	      return _react2.default.createElement(_map2.default, { position: this.state.mapCoords });
+	    }
+	
+	    //MISC------------------------------------------------------------------
+	
+	  }, {
+	    key: 'update',
+	    value: function update(field) {
+	      var _this3 = this;
+	
+	      return function (e) {
+	        _this3.setState(_defineProperty({}, field, e.currentTarget.value));
+	      };
 	    }
 	  }, {
 	    key: 'render',
@@ -27126,6 +27311,8 @@
 	              { className: 'address-list' },
 	              this.renderAddresses(this.props.addresses)
 	            ),
+	            this.schedulesLink(),
+	            this.schedules(),
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'address-input-link' },
@@ -27149,7 +27336,7 @@
 	exports.default = Address;
 
 /***/ },
-/* 322 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27214,6 +27401,211 @@
 	}(_react2.default.Component);
 	
 	exports.default = Map;
+
+/***/ },
+/* 327 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _reactRedux = __webpack_require__(314);
+	
+	var _schedule = __webpack_require__(328);
+	
+	var _schedule2 = _interopRequireDefault(_schedule);
+	
+	var _schedule_actions = __webpack_require__(307);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    addresses: state.addresses,
+	    schedules: state.schedules
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    getSchedule: function getSchedule(address) {
+	      return dispatch((0, _schedule_actions.requestSchedule)(address));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_schedule2.default);
+
+/***/ },
+/* 328 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Schedule = function (_React$Component) {
+	  _inherits(Schedule, _React$Component);
+	
+	  function Schedule(props) {
+	    _classCallCheck(this, Schedule);
+	
+	    var _this = _possibleConstructorReturn(this, (Schedule.__proto__ || Object.getPrototypeOf(Schedule)).call(this, props));
+	
+	    _this.addresses = [];
+	    _this.state = {
+	      schedules: []
+	    };
+	
+	    _this.filterSchedules = _this.filterSchedules.bind(_this);
+	    _this.getCurrentWeekNumber = _this.getCurrentWeekNumber.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(Schedule, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      this.props.addresses.forEach(function (address) {
+	        _this2.props.getSchedule(address);
+	      });
+	    }
+	  }, {
+	    key: "componentDidUpdate",
+	    value: function componentDidUpdate() {
+	      if (this.props.schedules !== undefined && this.state.schedules.length === 0) {
+	        var filtered = this.filterSchedules(this.props.schedules);
+	        if (filtered.length !== 0 && filtered.length !== this.state.schedules.length) {
+	          this.schedules = filtered;
+	          this.setState({ schedules: filtered });
+	        }
+	      }
+	    }
+	  }, {
+	    key: "filterSchedules",
+	    value: function filterSchedules(schedules) {
+	      var week = {
+	        "Sun": 0,
+	        "Mon": 1,
+	        "Tues": 2,
+	        "Wed": 3,
+	        "Thu": 4,
+	        "Fri": 5,
+	        "Sat": 6 };
+	      var currentWeekNum = this.getCurrentWeekNumber();
+	      var currentDay = new Date();
+	
+	      if (schedules.length === 0) {
+	        return [];
+	      } else {
+	        for (var i = 0; i < schedules.length; i++) {
+	          var weekMethod = "WEEK" + currentWeekNum + "OFMON";
+	          var day = week[schedules[i]["WEEKDAY"]];
+	
+	          if (schedules[i][weekMethod] === "Y") {
+	            if (day > currentDay.getUTCDay()) {
+	              return [schedules[i]];
+	            }
+	          }
+	        }
+	        return "Nothing";
+	      }
+	    }
+	  }, {
+	    key: "getCurrentWeekNumber",
+	    value: function getCurrentWeekNumber() {
+	      var current = new Date();
+	      var firstDayOfMonth = current.getFullYear() + "-" + (current.getMonth() + 1) + "-" + 1;
+	      var firstDay = new Date(firstDayOfMonth).getUTCDay();
+	      var currentDay = current.getUTCDate();
+	
+	      var currentWeek = 0;
+	      if (currentDay - (7 - firstDay) > 0) {
+	        currentWeek = Math.ceil((currentDay - (7 - firstDay)) / 7);
+	      }
+	      return currentWeek;
+	    }
+	  }, {
+	    key: "displaySchedule",
+	    value: function displaySchedule() {
+	      if (this.schedules === undefined || this.props.length === 0) {
+	        return _react2.default.createElement(
+	          "div",
+	          null,
+	          "Loading"
+	        );
+	      } else {
+	        return _react2.default.createElement(
+	          "div",
+	          null,
+	          this.setupSchedule(this.schedules)
+	        );
+	      }
+	    }
+	  }, {
+	    key: "setupSchedule",
+	    value: function setupSchedule(obj) {
+	      var day = obj['WEEKDAY'];
+	      var fromHour = obj['FROMHOUR'];
+	      var toHour = obj['TOHOUR'];
+	
+	      if (obj === 'Nothing') {
+	        return _react2.default.createElement(
+	          "div",
+	          null,
+	          "No street cleaning this week!"
+	        );
+	      } else {
+	        return _react2.default.createElement(
+	          "div",
+	          null,
+	          day + ", " + fromHour + " - " + toHour
+	        );
+	      }
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      if (this.props.schedules === undefined || this.props.length === 0) {
+	        return _react2.default.createElement(
+	          "div",
+	          null,
+	          "Loading..."
+	        );
+	      } else {
+	        return _react2.default.createElement(
+	          "div",
+	          null,
+	          this.displaySchedule()
+	        );
+	      }
+	    }
+	  }]);
+	
+	  return Schedule;
+	}(_react2.default.Component);
+	
+	exports.default = Schedule;
 
 /***/ }
 /******/ ]);
