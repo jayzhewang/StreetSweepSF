@@ -6,9 +6,9 @@ class Map extends React.Component {
     const coord = this.props.position;
     const mapOptions = {
       center: {lat: coord[0], lng: coord[1]},
-      zoom: 13,
+      zoom: 15,
       // zoomControl: false,
-      // mapTypeControl: false,
+      mapTypeControl: false,
       // scaleControl: false,
       // streetViewControl: false,
       // rotateControl: false,

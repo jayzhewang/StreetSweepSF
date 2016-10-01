@@ -10,7 +10,6 @@ const AddressMiddleware = ({getState, dispatch}) => next => action => {
       const success = function(obj){
         dispatch(receiveChromeSync(obj));
       };
-
       getChromeSyncAPI(success);
       return next(action);
     case AddressConstants.SET_CHROME_SYNC:

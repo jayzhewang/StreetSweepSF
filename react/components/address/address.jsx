@@ -6,6 +6,8 @@ class Address extends React.Component {
   constructor(props){
     super(props);
     this.addresses = [];
+    this.fetchedAddresses = [];
+    this.setChromeCount = 0;
     this.state = {
       showSchedules: false,
       showSchedulesLink: true,
@@ -13,7 +15,7 @@ class Address extends React.Component {
       showAddressInputLink: true,
       showMap: false,
       mapCoords: [37.7749, -122.4194],
-      inputAddress: "",
+      inputAddress: ""
     };
 
     this.showAddressInput = this.showAddressInput.bind(this);
@@ -22,6 +24,7 @@ class Address extends React.Component {
     this.removeAddress = this.removeAddress.bind(this);
     this.setupChromeSync = this.setupChromeSync.bind(this);
     this.setAddresses = this.setAddresses.bind(this);
+    this.closeMap = this.closeMap.bind(this);
   }
 
 //Lifecycle-------------------------------------------------------------
@@ -33,10 +36,20 @@ class Address extends React.Component {
   componentDidUpdate(){
     this.setupChromeSync();
     this.setAddresses();
+    let addresses = this.props.addresses;
+    if(addresses !== undefined &&
+       addresses.length !== 0 &&
+       this.fetchedAddresses.indexOf(addresses) === -1){
+      let addressString = addresses[0].split(" ").join("+");
+      this.fetchedAddresses.push(addresses);
+      window.console.log(this.props.addresses);
+      this.props.requestGeocoder(addressString);
+    }
   }
 
   setupChromeSync(){
-    if(this.props.addresses === undefined){
+    if(this.props.addresses === undefined && this.setChromeCount === 0){
+      this.setChromeCount += 1;
       this.props.setChromeSync([]);
     }
   }
@@ -62,7 +75,10 @@ class Address extends React.Component {
     this.addresses.splice(idx, 1);
     this.props.setChromeSync(this.addresses);
     this.setState({showSchedules: false,
-                   showSchedulesLink: true});
+                   showSchedulesLink: true,
+                   showMap: false });
+    let i = this.fetchedAddresses.indexOf(address);
+    this.fetchedAddresses.splice(i, 1);
   }
 
 //Address---------------------------------------------------------------
@@ -115,18 +131,20 @@ class Address extends React.Component {
               </li>
             </div>
 
-            <div className='close-icon-container'>
-              <img src='../../../assets/icons/close-icon.png'
-                onClick={(e)=>this.removeAddress(address, e)}
-                height='17'
-                width='17'/>
-            </div>
+            <div className='address-list-container-right-side'>
+              <div className='close-icon-container'>
+                <img src='../../../assets/icons/close-icon.png'
+                  onClick={(e)=>this.removeAddress(address, e)}
+                  height='17'
+                  width='17'/>
+              </div>
 
-            <div>
-              <img src='../../../assets/icons/map-icon.png'
-                   onClick={(e)=>this.toggleMap(address, e)}
-                   height='17'
-                   width='17'/>
+              <div className='map-icon-container'>
+                <img src='../../../assets/icons/map-icon.png'
+                  onClick={(e)=>this.toggleMap(address, e)}
+                  height='17'
+                  width='17'/>
+              </div>
             </div>
           </div>
         );
@@ -172,13 +190,33 @@ class Address extends React.Component {
 
   toggleMap(address, e){
     e.preventDefault();
-    this.setState({mapAdress: address});
+    window.console.log(this.props);
+    this.setState({mapCoords: this.props.geocoders,
+                   showMap: true});
   }
 
   showMap(){
-    return (
-      <Map position={this.state.mapCoords} />
-    );
+    if(this.state.showMap === true){
+      return (
+        <Map position={this.state.mapCoords} />
+      );
+    }
+  }
+
+  closeMap(){
+    this.setState({showMap: false});
+  }
+
+  showClose(){
+    if(this.state.showMap === true){
+      return(
+        <span onClick={this.closeMap}>
+          <img src='../../../assets/icons/icon-close-map.png'
+               height='11'
+               width='11'/>
+        </span>
+      );
+    }
   }
 
 //MISC------------------------------------------------------------------
@@ -190,7 +228,7 @@ class Address extends React.Component {
   render(){
     if(this.props.addresses === undefined){
       return (
-        <div>Loading...</div>
+        <div className='loader'></div>
       );
     } else {
       return (
@@ -209,7 +247,10 @@ class Address extends React.Component {
             </div>
           </div>
 
-          {this.showMap()}
+          <div className='address-map'>
+            {this.showClose()}
+            {this.showMap()}
+          </div>
         </div>
       );
     }

@@ -17,16 +17,25 @@
   justify-content: space-between;
 }
 
+.address-list-container-right-side {
+  display: flex;
+  justify-content: space-between;
+}
+
 .list-container {
   font-size: 14px;
 }
 
 .close-icon-container {
-  margin-left: 5px;
+  margin: 0 5px;
   display: block;
 }
 
 .close-icon-container > img:hover {
+  cursor: pointer;
+}
+
+.map-icon-container > img:hover {
   cursor: pointer;
 }
 

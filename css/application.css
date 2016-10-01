@@ -1,5 +1,6 @@
 @import 'address.css';
 @import 'schedule.css';
+@import 'map.css';
 
 html, body, header, footer, section, article, div,
 strong, a, img, p, h1, h2, h3, time, small,
@@ -47,4 +48,18 @@ form, label, input, textarea, button {
 .map {
   width: 249px;
   height: 249px;
+}
+
+.loader {
+  border: 3px solid #fafafa;
+  border-top: 3px solid black;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+  0 { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

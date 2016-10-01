@@ -22,6 +22,7 @@ class Schedule extends React.Component {
     if(this.props.schedules !== undefined &&
        this.state.schedules.length === 0){
         let filtered = this.filterSchedules(this.props.schedules);
+        window.console.log(this.props);
         if(filtered.length !== 0 && filtered.length !== this.state.schedules.length){
           this.schedules = filtered;
           this.setState({schedules: filtered});
@@ -75,9 +76,7 @@ class Schedule extends React.Component {
   displaySchedule(){
     if(this.schedules === undefined || this.props.length === 0){
       return (
-        <div>
-          Loading
-        </div>
+        <div className='loader'></div>
       );
     } else {
       return (
@@ -111,7 +110,7 @@ class Schedule extends React.Component {
   render(){
     if(this.props.schedules === undefined || this.props.length === 0){
       return(
-        <div>Loading...</div>
+        <div className='loader'></div>
       );
     } else {
       return(

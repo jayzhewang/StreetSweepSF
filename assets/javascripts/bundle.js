@@ -22349,11 +22349,16 @@
 	
 	var _schedule_reducer2 = _interopRequireDefault(_schedule_reducer);
 	
+	var _geocoder_reducer = __webpack_require__(331);
+	
+	var _geocoder_reducer2 = _interopRequireDefault(_geocoder_reducer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var RootReducer = (0, _redux.combineReducers)({
 	  addresses: _address_reducer2.default,
-	  schedules: _schedule_reducer2.default
+	  schedules: _schedule_reducer2.default,
+	  geocoders: _geocoder_reducer2.default
 	});
 	
 	exports.default = RootReducer;
@@ -22407,7 +22412,9 @@
 	var AddressConstants = exports.AddressConstants = {
 	  GET_CHROME_SYNC: 'REQUEST_CHROME_SYNC',
 	  SET_CHROME_SYNC: 'SET_CHROME_SYNC',
-	  RECEIVE_CHROME_SYNC: 'RECEIVE_CHROME_SYNC'
+	  RECEIVE_CHROME_SYNC: 'RECEIVE_CHROME_SYNC',
+	  REQUEST_GEOCODER: 'REQUEST_GEOCODER',
+	  RECEIVE_GEOCODER: 'RECEIVE_GEOCODER'
 	};
 	
 	var getChromeSync = exports.getChromeSync = function getChromeSync() {
@@ -22426,6 +22433,20 @@
 	var receiveChromeSync = exports.receiveChromeSync = function receiveChromeSync(obj) {
 	  return {
 	    type: AddressConstants.RECEIVE_CHROME_SYNC,
+	    obj: obj
+	  };
+	};
+	
+	var requestGeocoder = exports.requestGeocoder = function requestGeocoder(addressString) {
+	  return {
+	    type: AddressConstants.REQUEST_GEOCODER,
+	    addressString: addressString
+	  };
+	};
+	
+	var receiveGeocoder = exports.receiveGeocoder = function receiveGeocoder(obj) {
+	  return {
+	    type: AddressConstants.RECEIVE_GEOCODER,
 	    obj: obj
 	  };
 	};
@@ -26077,9 +26098,13 @@
 	
 	var _schedule_middleware2 = _interopRequireDefault(_schedule_middleware);
 	
+	var _geocoder_middleware = __webpack_require__(332);
+	
+	var _geocoder_middleware2 = _interopRequireDefault(_geocoder_middleware);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var RootMiddleware = (0, _redux.applyMiddleware)(_address_middleware2.default, _schedule_middleware2.default);
+	var RootMiddleware = (0, _redux.applyMiddleware)(_address_middleware2.default, _schedule_middleware2.default, _geocoder_middleware2.default);
 	
 	exports.default = RootMiddleware;
 
@@ -26107,7 +26132,6 @@
 	          var success = function success(obj) {
 	            dispatch((0, _address_actions.receiveChromeSync)(obj));
 	          };
-	
 	          (0, _chrome_api_util.getChromeSyncAPI)(success);
 	          return next(action);
 	        case _address_actions.AddressConstants.SET_CHROME_SYNC:
@@ -27007,10 +27031,14 @@
 	
 	var _address_actions = __webpack_require__(189);
 	
+	var _geocoder_actions = __webpack_require__(330);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var mapStateToProps = function mapStateToProps(state) {
-	  return { addresses: state.addresses };
+	  return { addresses: state.addresses,
+	    schedules: state.schedules,
+	    geocoders: state.geocoders };
 	};
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
@@ -27020,6 +27048,9 @@
 	    },
 	    setChromeSync: function setChromeSync(change) {
 	      return dispatch((0, _address_actions.setChromeSync)(change));
+	    },
+	    requestGeocoder: function requestGeocoder(addressString) {
+	      return dispatch((0, _geocoder_actions.requestGeocoder)(addressString));
 	    }
 	  };
 	};
@@ -27069,6 +27100,8 @@
 	    var _this = _possibleConstructorReturn(this, (Address.__proto__ || Object.getPrototypeOf(Address)).call(this, props));
 	
 	    _this.addresses = [];
+	    _this.fetchedAddresses = [];
+	    _this.setChromeCount = 0;
 	    _this.state = {
 	      showSchedules: false,
 	      showSchedulesLink: true,
@@ -27085,6 +27118,7 @@
 	    _this.removeAddress = _this.removeAddress.bind(_this);
 	    _this.setupChromeSync = _this.setupChromeSync.bind(_this);
 	    _this.setAddresses = _this.setAddresses.bind(_this);
+	    _this.closeMap = _this.closeMap.bind(_this);
 	    return _this;
 	  }
 	
@@ -27100,11 +27134,19 @@
 	    value: function componentDidUpdate() {
 	      this.setupChromeSync();
 	      this.setAddresses();
+	      var addresses = this.props.addresses;
+	      if (addresses !== undefined && addresses.length !== 0 && this.fetchedAddresses.indexOf(addresses) === -1) {
+	        var addressString = addresses[0].split(" ").join("+");
+	        this.fetchedAddresses.push(addresses);
+	        window.console.log(this.props.addresses);
+	        this.props.requestGeocoder(addressString);
+	      }
 	    }
 	  }, {
 	    key: 'setupChromeSync',
 	    value: function setupChromeSync() {
-	      if (this.props.addresses === undefined) {
+	      if (this.props.addresses === undefined && this.setChromeCount === 0) {
+	        this.setChromeCount += 1;
 	        this.props.setChromeSync([]);
 	      }
 	    }
@@ -27134,7 +27176,10 @@
 	      this.addresses.splice(idx, 1);
 	      this.props.setChromeSync(this.addresses);
 	      this.setState({ showSchedules: false,
-	        showSchedulesLink: true });
+	        showSchedulesLink: true,
+	        showMap: false });
+	      var i = this.fetchedAddresses.indexOf(address);
+	      this.fetchedAddresses.splice(i, 1);
 	    }
 	
 	    //Address---------------------------------------------------------------
@@ -27201,23 +27246,27 @@
 	            ),
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'close-icon-container' },
-	              _react2.default.createElement('img', { src: '../../../assets/icons/close-icon.png',
-	                onClick: function onClick(e) {
-	                  return _this2.removeAddress(address, e);
-	                },
-	                height: '17',
-	                width: '17' })
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              null,
-	              _react2.default.createElement('img', { src: '../../../assets/icons/map-icon.png',
-	                onClick: function onClick(e) {
-	                  return _this2.toggleMap(address, e);
-	                },
-	                height: '17',
-	                width: '17' })
+	              { className: 'address-list-container-right-side' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'close-icon-container' },
+	                _react2.default.createElement('img', { src: '../../../assets/icons/close-icon.png',
+	                  onClick: function onClick(e) {
+	                    return _this2.removeAddress(address, e);
+	                  },
+	                  height: '17',
+	                  width: '17' })
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'map-icon-container' },
+	                _react2.default.createElement('img', { src: '../../../assets/icons/map-icon.png',
+	                  onClick: function onClick(e) {
+	                    return _this2.toggleMap(address, e);
+	                  },
+	                  height: '17',
+	                  width: '17' })
+	              )
 	            )
 	          );
 	        });
@@ -27271,12 +27320,34 @@
 	    key: 'toggleMap',
 	    value: function toggleMap(address, e) {
 	      e.preventDefault();
-	      this.setState({ mapAdress: address });
+	      window.console.log(this.props);
+	      this.setState({ mapCoords: this.props.geocoders,
+	        showMap: true });
 	    }
 	  }, {
 	    key: 'showMap',
 	    value: function showMap() {
-	      return _react2.default.createElement(_map2.default, { position: this.state.mapCoords });
+	      if (this.state.showMap === true) {
+	        return _react2.default.createElement(_map2.default, { position: this.state.mapCoords });
+	      }
+	    }
+	  }, {
+	    key: 'closeMap',
+	    value: function closeMap() {
+	      this.setState({ showMap: false });
+	    }
+	  }, {
+	    key: 'showClose',
+	    value: function showClose() {
+	      if (this.state.showMap === true) {
+	        return _react2.default.createElement(
+	          'span',
+	          { onClick: this.closeMap },
+	          _react2.default.createElement('img', { src: '../../../assets/icons/icon-close-map.png',
+	            height: '11',
+	            width: '11' })
+	        );
+	      }
 	    }
 	
 	    //MISC------------------------------------------------------------------
@@ -27294,11 +27365,7 @@
 	    key: 'render',
 	    value: function render() {
 	      if (this.props.addresses === undefined) {
-	        return _react2.default.createElement(
-	          'div',
-	          null,
-	          'Loading...'
-	        );
+	        return _react2.default.createElement('div', { className: 'loader' });
 	      } else {
 	        return _react2.default.createElement(
 	          'div',
@@ -27324,7 +27391,12 @@
 	              this.addressInput()
 	            )
 	          ),
-	          this.showMap()
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'address-map' },
+	            this.showClose(),
+	            this.showMap()
+	          )
 	        );
 	      }
 	    }
@@ -27375,7 +27447,9 @@
 	      var coord = this.props.position;
 	      var mapOptions = {
 	        center: { lat: coord[0], lng: coord[1] },
-	        zoom: 13
+	        zoom: 15,
+	        // zoomControl: false,
+	        mapTypeControl: false
 	      };
 	
 	      this.map = new google.maps.Map(mapDOMNode, mapOptions);
@@ -27495,6 +27569,7 @@
 	    value: function componentDidUpdate() {
 	      if (this.props.schedules !== undefined && this.state.schedules.length === 0) {
 	        var filtered = this.filterSchedules(this.props.schedules);
+	        window.console.log(this.props);
 	        if (filtered.length !== 0 && filtered.length !== this.state.schedules.length) {
 	          this.schedules = filtered;
 	          this.setState({ schedules: filtered });
@@ -27549,11 +27624,7 @@
 	    key: "displaySchedule",
 	    value: function displaySchedule() {
 	      if (this.schedules === undefined || this.props.length === 0) {
-	        return _react2.default.createElement(
-	          "div",
-	          null,
-	          "Loading"
-	        );
+	        return _react2.default.createElement("div", { className: "loader" });
 	      } else {
 	        return _react2.default.createElement(
 	          "div",
@@ -27587,11 +27658,7 @@
 	    key: "render",
 	    value: function render() {
 	      if (this.props.schedules === undefined || this.props.length === 0) {
-	        return _react2.default.createElement(
-	          "div",
-	          null,
-	          "Loading..."
-	        );
+	        return _react2.default.createElement("div", { className: "loader" });
 	      } else {
 	        return _react2.default.createElement(
 	          "div",
@@ -27606,6 +27673,122 @@
 	}(_react2.default.Component);
 	
 	exports.default = Schedule;
+
+/***/ },
+/* 329 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var fetchCoords = exports.fetchCoords = function fetchCoords(addressString, successFunc) {
+	  var string = addressString + ",+San+Francisco,+CA";
+	  $.ajax({
+	    type: 'GET',
+	    url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent(string) + "&key=AIzaSyCl2Zpfpn1LOoTf1jvicyW00_kkQvgi-Xo",
+	    success: successFunc
+	  });
+	};
+
+/***/ },
+/* 330 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var GeocoderConstants = exports.GeocoderConstants = {
+	  REQUEST_GEOCODER: 'REQUEST_GEOCODER',
+	  RECEIVE_GEOCODER: 'RECEIVE_GEOCODER'
+	};
+	
+	var requestGeocoder = exports.requestGeocoder = function requestGeocoder(addressString) {
+	  return {
+	    type: GeocoderConstants.REQUEST_GEOCODER,
+	    addressString: addressString
+	  };
+	};
+	
+	var receiveGeocoder = exports.receiveGeocoder = function receiveGeocoder(obj) {
+	  return {
+	    type: GeocoderConstants.RECEIVE_GEOCODER,
+	    obj: obj
+	  };
+	};
+
+/***/ },
+/* 331 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _geocoder_actions = __webpack_require__(330);
+	
+	var _merge = __webpack_require__(190);
+	
+	var _merge2 = _interopRequireDefault(_merge);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var GeocoderReducer = function GeocoderReducer() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case _geocoder_actions.GeocoderConstants.RECEIVE_GEOCODER:
+	      var lat = action.obj["results"][0]["geometry"]["location"]["lat"];
+	      var lng = action.obj["results"][0]["geometry"]["location"]["lng"];
+	      return [lat, lng];
+	    default:
+	      return state;
+	  }
+	};
+	
+	exports.default = GeocoderReducer;
+
+/***/ },
+/* 332 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _geocoder_actions = __webpack_require__(330);
+	
+	var _geocoder_api_util = __webpack_require__(329);
+	
+	var GeocoderMiddleware = function GeocoderMiddleware(_ref) {
+	  var getState = _ref.getState;
+	  var dispatch = _ref.dispatch;
+	  return function (next) {
+	    return function (action) {
+	      switch (action.type) {
+	        case _geocoder_actions.GeocoderConstants.REQUEST_GEOCODER:
+	          var addressString = action.addressString;
+	          var success1 = function success1(obj) {
+	            dispatch((0, _geocoder_actions.receiveGeocoder)(obj));
+	          };
+	          (0, _geocoder_api_util.fetchCoords)(addressString, success1);
+	          return next(action);
+	        default:
+	          return next(action);
+	      }
+	    };
+	  };
+	};
+	
+	exports.default = GeocoderMiddleware;
 
 /***/ }
 /******/ ]);
