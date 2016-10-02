@@ -58,7 +58,7 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _root = __webpack_require__(313);
+	var _root = __webpack_require__(317);
 	
 	var _root2 = _interopRequireDefault(_root);
 	
@@ -21453,7 +21453,7 @@
 	
 	var _root_reducer2 = _interopRequireDefault(_root_reducer);
 	
-	var _root_middleware = __webpack_require__(308);
+	var _root_middleware = __webpack_require__(310);
 	
 	var _root_middleware2 = _interopRequireDefault(_root_middleware);
 	
@@ -22349,7 +22349,7 @@
 	
 	var _schedule_reducer2 = _interopRequireDefault(_schedule_reducer);
 	
-	var _geocoder_reducer = __webpack_require__(331);
+	var _geocoder_reducer = __webpack_require__(308);
 	
 	var _geocoder_reducer2 = _interopRequireDefault(_geocoder_reducer);
 	
@@ -26088,17 +26088,79 @@
 	  value: true
 	});
 	
+	var _geocoder_actions = __webpack_require__(309);
+	
+	var _merge = __webpack_require__(190);
+	
+	var _merge2 = _interopRequireDefault(_merge);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var GeocoderReducer = function GeocoderReducer() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case _geocoder_actions.GeocoderConstants.RECEIVE_GEOCODER:
+	      var lat = action.obj["results"][0]["geometry"]["location"]["lat"];
+	      var lng = action.obj["results"][0]["geometry"]["location"]["lng"];
+	      return [lat, lng];
+	    default:
+	      return state;
+	  }
+	};
+	
+	exports.default = GeocoderReducer;
+
+/***/ },
+/* 309 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var GeocoderConstants = exports.GeocoderConstants = {
+	  REQUEST_GEOCODER: 'REQUEST_GEOCODER',
+	  RECEIVE_GEOCODER: 'RECEIVE_GEOCODER'
+	};
+	
+	var requestGeocoder = exports.requestGeocoder = function requestGeocoder(addressString) {
+	  return {
+	    type: GeocoderConstants.REQUEST_GEOCODER,
+	    addressString: addressString
+	  };
+	};
+	
+	var receiveGeocoder = exports.receiveGeocoder = function receiveGeocoder(obj) {
+	  return {
+	    type: GeocoderConstants.RECEIVE_GEOCODER,
+	    obj: obj
+	  };
+	};
+
+/***/ },
+/* 310 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
 	var _redux = __webpack_require__(173);
 	
-	var _address_middleware = __webpack_require__(309);
+	var _address_middleware = __webpack_require__(311);
 	
 	var _address_middleware2 = _interopRequireDefault(_address_middleware);
 	
-	var _schedule_middleware = __webpack_require__(311);
+	var _schedule_middleware = __webpack_require__(313);
 	
 	var _schedule_middleware2 = _interopRequireDefault(_schedule_middleware);
 	
-	var _geocoder_middleware = __webpack_require__(332);
+	var _geocoder_middleware = __webpack_require__(315);
 	
 	var _geocoder_middleware2 = _interopRequireDefault(_geocoder_middleware);
 	
@@ -26109,7 +26171,7 @@
 	exports.default = RootMiddleware;
 
 /***/ },
-/* 309 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26120,7 +26182,7 @@
 	
 	var _address_actions = __webpack_require__(189);
 	
-	var _chrome_api_util = __webpack_require__(310);
+	var _chrome_api_util = __webpack_require__(312);
 	
 	var AddressMiddleware = function AddressMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -26148,7 +26210,7 @@
 	exports.default = AddressMiddleware;
 
 /***/ },
-/* 310 */
+/* 312 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26165,7 +26227,7 @@
 	};
 
 /***/ },
-/* 311 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26176,9 +26238,9 @@
 	
 	var _schedule_actions = __webpack_require__(307);
 	
-	var _chrome_api_util = __webpack_require__(310);
+	var _chrome_api_util = __webpack_require__(312);
 	
-	var _rails_api_util = __webpack_require__(312);
+	var _rails_api_util = __webpack_require__(314);
 	
 	var ScheduleMiddleware = function ScheduleMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -26204,7 +26266,7 @@
 	exports.default = ScheduleMiddleware;
 
 /***/ },
-/* 312 */
+/* 314 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26222,7 +26284,61 @@
 	};
 
 /***/ },
-/* 313 */
+/* 315 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _geocoder_actions = __webpack_require__(309);
+	
+	var _geocoder_api_util = __webpack_require__(316);
+	
+	var GeocoderMiddleware = function GeocoderMiddleware(_ref) {
+	  var getState = _ref.getState;
+	  var dispatch = _ref.dispatch;
+	  return function (next) {
+	    return function (action) {
+	      switch (action.type) {
+	        case _geocoder_actions.GeocoderConstants.REQUEST_GEOCODER:
+	          var addressString = action.addressString;
+	          var success1 = function success1(obj) {
+	            dispatch((0, _geocoder_actions.receiveGeocoder)(obj));
+	          };
+	          (0, _geocoder_api_util.fetchCoords)(addressString, success1);
+	          return next(action);
+	        default:
+	          return next(action);
+	      }
+	    };
+	  };
+	};
+	
+	exports.default = GeocoderMiddleware;
+
+/***/ },
+/* 316 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var fetchCoords = exports.fetchCoords = function fetchCoords(addressString, successFunc) {
+	  var string = addressString + ",+San+Francisco,+CA";
+	  $.ajax({
+	    type: 'GET',
+	    url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent(string) + "&key=AIzaSyCl2Zpfpn1LOoTf1jvicyW00_kkQvgi-Xo",
+	    success: successFunc
+	  });
+	};
+
+/***/ },
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26235,9 +26351,9 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactRedux = __webpack_require__(314);
+	var _reactRedux = __webpack_require__(318);
 	
-	var _app = __webpack_require__(323);
+	var _app = __webpack_require__(327);
 	
 	var _app2 = _interopRequireDefault(_app);
 	
@@ -26255,7 +26371,7 @@
 	exports.default = Root;
 
 /***/ },
-/* 314 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26263,11 +26379,11 @@
 	exports.__esModule = true;
 	exports.connect = exports.Provider = undefined;
 	
-	var _Provider = __webpack_require__(315);
+	var _Provider = __webpack_require__(319);
 	
 	var _Provider2 = _interopRequireDefault(_Provider);
 	
-	var _connect = __webpack_require__(318);
+	var _connect = __webpack_require__(322);
 	
 	var _connect2 = _interopRequireDefault(_connect);
 	
@@ -26277,7 +26393,7 @@
 	exports.connect = _connect2["default"];
 
 /***/ },
-/* 315 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26287,11 +26403,11 @@
 	
 	var _react = __webpack_require__(1);
 	
-	var _storeShape = __webpack_require__(316);
+	var _storeShape = __webpack_require__(320);
 	
 	var _storeShape2 = _interopRequireDefault(_storeShape);
 	
-	var _warning = __webpack_require__(317);
+	var _warning = __webpack_require__(321);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -26361,7 +26477,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 316 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26377,7 +26493,7 @@
 	});
 
 /***/ },
-/* 317 */
+/* 321 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26406,7 +26522,7 @@
 	}
 
 /***/ },
-/* 318 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26418,19 +26534,19 @@
 	
 	var _react = __webpack_require__(1);
 	
-	var _storeShape = __webpack_require__(316);
+	var _storeShape = __webpack_require__(320);
 	
 	var _storeShape2 = _interopRequireDefault(_storeShape);
 	
-	var _shallowEqual = __webpack_require__(319);
+	var _shallowEqual = __webpack_require__(323);
 	
 	var _shallowEqual2 = _interopRequireDefault(_shallowEqual);
 	
-	var _wrapActionCreators = __webpack_require__(320);
+	var _wrapActionCreators = __webpack_require__(324);
 	
 	var _wrapActionCreators2 = _interopRequireDefault(_wrapActionCreators);
 	
-	var _warning = __webpack_require__(317);
+	var _warning = __webpack_require__(321);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -26438,11 +26554,11 @@
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _hoistNonReactStatics = __webpack_require__(321);
+	var _hoistNonReactStatics = __webpack_require__(325);
 	
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 	
-	var _invariant = __webpack_require__(322);
+	var _invariant = __webpack_require__(326);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -26805,7 +26921,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 319 */
+/* 323 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26836,7 +26952,7 @@
 	}
 
 /***/ },
-/* 320 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26853,7 +26969,7 @@
 	}
 
 /***/ },
-/* 321 */
+/* 325 */
 /***/ function(module, exports) {
 
 	/**
@@ -26909,7 +27025,7 @@
 
 
 /***/ },
-/* 322 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26967,7 +27083,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 323 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26980,7 +27096,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _address_container = __webpack_require__(324);
+	var _address_container = __webpack_require__(328);
 	
 	var _address_container2 = _interopRequireDefault(_address_container);
 	
@@ -27017,7 +27133,7 @@
 	exports.default = App;
 
 /***/ },
-/* 324 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27026,15 +27142,15 @@
 	  value: true
 	});
 	
-	var _reactRedux = __webpack_require__(314);
+	var _reactRedux = __webpack_require__(318);
 	
-	var _address = __webpack_require__(325);
+	var _address = __webpack_require__(329);
 	
 	var _address2 = _interopRequireDefault(_address);
 	
 	var _address_actions = __webpack_require__(189);
 	
-	var _geocoder_actions = __webpack_require__(330);
+	var _geocoder_actions = __webpack_require__(309);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -27061,7 +27177,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_address2.default);
 
 /***/ },
-/* 325 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27076,11 +27192,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _map = __webpack_require__(326);
+	var _map = __webpack_require__(330);
 	
 	var _map2 = _interopRequireDefault(_map);
 	
-	var _schedule_container = __webpack_require__(327);
+	var _schedule_container = __webpack_require__(331);
 	
 	var _schedule_container2 = _interopRequireDefault(_schedule_container);
 	
@@ -27122,6 +27238,7 @@
 	    _this.setupChromeSync = _this.setupChromeSync.bind(_this);
 	    _this.setAddresses = _this.setAddresses.bind(_this);
 	    _this.closeMap = _this.closeMap.bind(_this);
+	    _this.closeInputLink = _this.closeInputLink.bind(_this);
 	    return _this;
 	  }
 	
@@ -27141,7 +27258,6 @@
 	      if (addresses !== undefined && addresses.length !== 0 && this.fetchedAddresses.indexOf(addresses) === -1) {
 	        var addressString = addresses[0].split(" ").join("+");
 	        this.fetchedAddresses.push(addresses);
-	        window.console.log(this.props.addresses);
 	        this.props.requestGeocoder(addressString);
 	      }
 	    }
@@ -27199,10 +27315,17 @@
 	      if (this.state.showAddressInputLink === true) {
 	        return _react2.default.createElement(
 	          'div',
-	          { onClick: this.showAddressInput },
+	          { className: 'address-input-link',
+	            onClick: this.showAddressInput },
 	          'Add Address'
 	        );
 	      }
+	    }
+	  }, {
+	    key: 'closeInputLink',
+	    value: function closeInputLink() {
+	      this.setState({ showAddressInput: false,
+	        showAddressInputLink: true });
 	    }
 	  }, {
 	    key: 'addressInput',
@@ -27216,9 +27339,27 @@
 	            value: this.state.inputAddress,
 	            onChange: this.update('inputAddress'),
 	            className: 'address-input-box-input' }),
-	          _react2.default.createElement('input', { type: 'submit',
-	            value: '+',
-	            className: 'address-input-box-submit' })
+	          _react2.default.createElement('input', { type: 'submit', value: '' }),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'address-input-buttons' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'address-input-box-submit',
+	                onClick: this.submitAddress },
+	              _react2.default.createElement('img', { src: '../../../assets/icons/plus-icon.png',
+	                width: '10',
+	                height: '10' })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'address-input-box-submit',
+	                onClick: this.closeInputLink },
+	              _react2.default.createElement('img', { src: '../../../assets/icons/icon-close-map.png',
+	                width: '10',
+	                height: '10' })
+	            )
+	          )
 	        );
 	      }
 	    }
@@ -27383,11 +27524,7 @@
 	            ),
 	            this.schedulesLink(),
 	            this.schedules(),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'address-input-link' },
-	              this.addressesInputLink()
-	            ),
+	            this.addressesInputLink(),
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'address-input-box' },
@@ -27411,7 +27548,7 @@
 	exports.default = Address;
 
 /***/ },
-/* 326 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27480,7 +27617,7 @@
 	exports.default = Map;
 
 /***/ },
-/* 327 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27489,9 +27626,9 @@
 	  value: true
 	});
 	
-	var _reactRedux = __webpack_require__(314);
+	var _reactRedux = __webpack_require__(318);
 	
-	var _schedule = __webpack_require__(328);
+	var _schedule = __webpack_require__(332);
 	
 	var _schedule2 = _interopRequireDefault(_schedule);
 	
@@ -27517,7 +27654,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_schedule2.default);
 
 /***/ },
-/* 328 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -27676,122 +27813,6 @@
 	}(_react2.default.Component);
 	
 	exports.default = Schedule;
-
-/***/ },
-/* 329 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var fetchCoords = exports.fetchCoords = function fetchCoords(addressString, successFunc) {
-	  var string = addressString + ",+San+Francisco,+CA";
-	  $.ajax({
-	    type: 'GET',
-	    url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent(string) + "&key=AIzaSyCl2Zpfpn1LOoTf1jvicyW00_kkQvgi-Xo",
-	    success: successFunc
-	  });
-	};
-
-/***/ },
-/* 330 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var GeocoderConstants = exports.GeocoderConstants = {
-	  REQUEST_GEOCODER: 'REQUEST_GEOCODER',
-	  RECEIVE_GEOCODER: 'RECEIVE_GEOCODER'
-	};
-	
-	var requestGeocoder = exports.requestGeocoder = function requestGeocoder(addressString) {
-	  return {
-	    type: GeocoderConstants.REQUEST_GEOCODER,
-	    addressString: addressString
-	  };
-	};
-	
-	var receiveGeocoder = exports.receiveGeocoder = function receiveGeocoder(obj) {
-	  return {
-	    type: GeocoderConstants.RECEIVE_GEOCODER,
-	    obj: obj
-	  };
-	};
-
-/***/ },
-/* 331 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _geocoder_actions = __webpack_require__(330);
-	
-	var _merge = __webpack_require__(190);
-	
-	var _merge2 = _interopRequireDefault(_merge);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var GeocoderReducer = function GeocoderReducer() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-	  var action = arguments[1];
-	
-	  switch (action.type) {
-	    case _geocoder_actions.GeocoderConstants.RECEIVE_GEOCODER:
-	      var lat = action.obj["results"][0]["geometry"]["location"]["lat"];
-	      var lng = action.obj["results"][0]["geometry"]["location"]["lng"];
-	      return [lat, lng];
-	    default:
-	      return state;
-	  }
-	};
-	
-	exports.default = GeocoderReducer;
-
-/***/ },
-/* 332 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _geocoder_actions = __webpack_require__(330);
-	
-	var _geocoder_api_util = __webpack_require__(329);
-	
-	var GeocoderMiddleware = function GeocoderMiddleware(_ref) {
-	  var getState = _ref.getState;
-	  var dispatch = _ref.dispatch;
-	  return function (next) {
-	    return function (action) {
-	      switch (action.type) {
-	        case _geocoder_actions.GeocoderConstants.REQUEST_GEOCODER:
-	          var addressString = action.addressString;
-	          var success1 = function success1(obj) {
-	            dispatch((0, _geocoder_actions.receiveGeocoder)(obj));
-	          };
-	          (0, _geocoder_api_util.fetchCoords)(addressString, success1);
-	          return next(action);
-	        default:
-	          return next(action);
-	      }
-	    };
-	  };
-	};
-	
-	exports.default = GeocoderMiddleware;
 
 /***/ }
 /******/ ]);

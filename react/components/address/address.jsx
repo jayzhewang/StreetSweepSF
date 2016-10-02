@@ -25,6 +25,7 @@ class Address extends React.Component {
     this.setupChromeSync = this.setupChromeSync.bind(this);
     this.setAddresses = this.setAddresses.bind(this);
     this.closeMap = this.closeMap.bind(this);
+    this.closeInputLink = this.closeInputLink.bind(this);
   }
 
 //Lifecycle-------------------------------------------------------------
@@ -42,7 +43,6 @@ class Address extends React.Component {
        this.fetchedAddresses.indexOf(addresses) === -1){
       let addressString = addresses[0].split(" ").join("+");
       this.fetchedAddresses.push(addresses);
-      window.console.log(this.props.addresses);
       this.props.requestGeocoder(addressString);
     }
   }
@@ -91,11 +91,17 @@ class Address extends React.Component {
   addressesInputLink(){
     if(this.state.showAddressInputLink === true){
       return (
-        <div onClick={this.showAddressInput}>
+        <div className='address-input-link'
+             onClick={this.showAddressInput}>
           Add Address
         </div>
       );
     }
+  }
+
+  closeInputLink(){
+    this.setState({ showAddressInput: false,
+                    showAddressInputLink: true });
   }
 
   addressInput(){
@@ -107,10 +113,23 @@ class Address extends React.Component {
                  value={this.state.inputAddress}
                  onChange={this.update('inputAddress')}
                  className='address-input-box-input'/>
+          <input type='submit' value=""/>
 
-          <input type='submit'
-                 value='+'
-                 className='address-input-box-submit'/>
+          <div className='address-input-buttons'>
+            <div className='address-input-box-submit'
+              onClick={this.submitAddress}>
+              <img src='../../../assets/icons/plus-icon.png'
+                width='10'
+                height='10'/>
+            </div>
+
+            <div className='address-input-box-submit'
+              onClick={this.closeInputLink}>
+              <img src='../../../assets/icons/icon-close-map.png'
+                width='10'
+                height='10'/>
+            </div>
+          </div>
         </form>
       );
     }
@@ -239,9 +258,8 @@ class Address extends React.Component {
             </div>
               {this.schedulesLink()}
               {this.schedules()}
-            <div className='address-input-link'>
               {this.addressesInputLink()}
-            </div>
+
             <div className='address-input-box'>
               {this.addressInput()}
             </div>

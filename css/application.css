@@ -46,8 +46,9 @@ form, label, input, textarea, button {
 }
 
 .map {
-  width: 249px;
-  height: 249px;
+  border: 1px solid #b2dba1;
+  width: 248px;
+  height: 248px;
 }
 
 .loader {

@@ -45,14 +45,14 @@
 }
 
 .address-input-link {
+  padding: 5px 0 5px 10px;
+  background: #DFF0D8;
   margin-bottom: 10px;
+  border-top: 1px solid #b2dba1;
+  border-bottom: 1px solid #b2dba1;
 }
 
-.address-input-link > div {
-  padding-left: 10px;
-}
-
-.address-input-link > div:hover{
+.address-input-link:hover{
   cursor: pointer;
   background: #DFF0D8;
 }
@@ -62,6 +62,11 @@
   margin-bottom: 10px;
 }
 
+.address-input-box > form {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .address-input-box-input {
   border: 1px solid #b2dba1;
 }
@@ -69,7 +74,7 @@
 .address-input-box-submit {
   padding: 0 5px;
   background: #DFF0D8;
-  margin-left: 10px;
+  margin-left: 5px;
   border-radius: 5px;
   border: 1px solid #b2dba1;
   color: #808080;
@@ -77,6 +82,12 @@
 
 .address-input-box-submit:hover {
   cursor: pointer;
+}
+
+.address-input-buttons {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 5px;
 }
 
 *::-webkit-input-placeholder {
