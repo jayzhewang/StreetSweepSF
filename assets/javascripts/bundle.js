@@ -26995,7 +26995,10 @@
 	    _react2.default.createElement(
 	      'div',
 	      { className: 'app-title group' },
-	      _react2.default.createElement('img', { src: '../../assets/icons/broom-38.png', alt: 'broom' }),
+	      _react2.default.createElement('img', { src: '../../assets/icons/broom-cross-128.png',
+	        height: '38',
+	        width: '38',
+	        alt: 'broom' }),
 	      _react2.default.createElement(
 	        'h1',
 	        null,
