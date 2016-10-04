@@ -27656,7 +27656,7 @@
 /* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -27667,6 +27667,10 @@
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _reminder_container = __webpack_require__(333);
+	
+	var _reminder_container2 = _interopRequireDefault(_reminder_container);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -27693,6 +27697,7 @@
 	    _this.state = {
 	      schedules: []
 	    };
+	
 	    _this.week = {
 	      "Sun": 0,
 	      "Mon": 1,
@@ -27703,11 +27708,12 @@
 	      "Sat": 6 };
 	    _this.filterSchedules = _this.filterSchedules.bind(_this);
 	    _this.getCurrentWeekNumber = _this.getCurrentWeekNumber.bind(_this);
+	    _this._displaySchedule = _this._displaySchedule.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(Schedule, [{
-	    key: "componentDidMount",
+	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      var _this2 = this;
 	
@@ -27716,7 +27722,7 @@
 	      });
 	    }
 	  }, {
-	    key: "componentDidUpdate",
+	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate() {
 	      if (this.props.schedules !== undefined && this.state.schedules.length === 0) {
 	        var filtered = this.filterSchedules(this.props.schedules);
@@ -27727,7 +27733,7 @@
 	      }
 	    }
 	  }, {
-	    key: "filterSchedules",
+	    key: 'filterSchedules',
 	    value: function filterSchedules(schedules) {
 	      var earliestSchedule = "Nothing";
 	      if (schedules.length === 0) {
@@ -27745,13 +27751,13 @@
 	      }
 	    }
 	  }, {
-	    key: "_filter",
+	    key: '_filter',
 	    value: function _filter(schedules, week, earliestSchedule) {
 	      var currentWeekNum = this.getCurrentWeekNumber();
 	      var currentDay = new Date();
 	
 	      for (var i = 0; i < schedules.length; i++) {
-	        var weekMethod = "WEEK" + currentWeekNum + "OFMON";
+	        var weekMethod = 'WEEK' + currentWeekNum + 'OFMON';
 	        var day = week[schedules[i]["WEEKDAY"]];
 	        if (schedules[i][weekMethod] === "Y" && day > currentDay.getUTCDay()) {
 	          if (earliestSchedule === "Nothing") {
@@ -27764,13 +27770,13 @@
 	      return [0, earliestSchedule];
 	    }
 	  }, {
-	    key: "_filterNextWeeks",
+	    key: '_filterNextWeeks',
 	    value: function _filterNextWeeks(schedules, week, earliestSchedule, plusAmount) {
 	      var currentWeekNum = this.getCurrentWeekNumber() + plusAmount;
 	      var currentDay = new Date();
 	
 	      for (var i = 0; i < schedules.length; i++) {
-	        var weekMethod = "WEEK" + currentWeekNum + "OFMON";
+	        var weekMethod = 'WEEK' + currentWeekNum + 'OFMON';
 	        var day = week[schedules[i]["WEEKDAY"]];
 	        if (schedules[i][weekMethod] === "Y") {
 	          if (earliestSchedule === "Nothing") {
@@ -27783,7 +27789,7 @@
 	      return [plusAmount, earliestSchedule];
 	    }
 	  }, {
-	    key: "getCurrentWeekNumber",
+	    key: 'getCurrentWeekNumber',
 	    value: function getCurrentWeekNumber() {
 	      var current = new Date();
 	      var firstDayOfMonth = current.getFullYear() + "-" + (current.getMonth() + 1) + "-" + 1;
@@ -27797,30 +27803,37 @@
 	      return currentWeek;
 	    }
 	  }, {
-	    key: "displaySchedule",
+	    key: 'displaySchedule',
 	    value: function displaySchedule() {
 	      if (this.schedules === undefined || this.props.length === 0) {
-	        return _react2.default.createElement("div", { className: "loader" });
+	        return _react2.default.createElement('div', { className: 'loader' });
 	      } else {
 	        return _react2.default.createElement(
-	          "div",
-	          { className: "street-cleaning-info" },
+	          'div',
+	          { className: 'street-cleaning-info' },
 	          _react2.default.createElement(
-	            "h1",
+	            'h1',
 	            null,
-	            "Next Street Cleaning:"
+	            'Next Street Cleaning:'
 	          ),
 	          _react2.default.createElement(
-	            "ol",
+	            'ol',
 	            null,
-	            this.setupSchedule(this.schedules)
+	            this.setupSchedule(this.schedules, 'FORSCHEDULE')
 	          )
 	        );
 	      }
 	    }
 	  }, {
-	    key: "setupSchedule",
-	    value: function setupSchedule(obj) {
+	    key: '_displaySchedule',
+	    value: function _displaySchedule() {
+	      if (this.schedules !== undefined) {
+	        return this.setupSchedule(this.schedules, "FORREMINDER");
+	      }
+	    }
+	  }, {
+	    key: 'setupSchedule',
+	    value: function setupSchedule(obj, condition) {
 	      var week = obj[0];
 	      var schedule = obj[1];
 	      var day = schedule['WEEKDAY'];
@@ -27830,21 +27843,26 @@
 	      var nextDate = new Date();
 	      var currentDay = nextDate.getUTCDay();
 	      nextDate.addDays(7 * week + (this.week[day] - currentDay));
+	      var date = this._convertDate(nextDate);
 	
-	      return _react2.default.createElement(
-	        "div",
-	        { className: "street-cleaning-schedule" },
-	        _react2.default.createElement(
-	          "li",
-	          { type: "A" },
-	          this._convertDate(nextDate),
-	          _react2.default.createElement("br", null),
-	          day + ", " + fromHour + " - " + toHour
-	        )
-	      );
+	      if (condition === 'FORSCHEDULE') {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'street-cleaning-schedule' },
+	          _react2.default.createElement(
+	            'li',
+	            { type: 'A' },
+	            date,
+	            _react2.default.createElement('br', null),
+	            day + ', ' + fromHour + ' - ' + toHour
+	          )
+	        );
+	      } else {
+	        return [date, fromHour, toHour];
+	      }
 	    }
 	  }, {
-	    key: "_convertDate",
+	    key: '_convertDate',
 	    value: function _convertDate(dateObj) {
 	      function pad(s) {
 	        return s < 10 ? '0' + s : s;
@@ -27852,15 +27870,16 @@
 	      return [pad(dateObj.getMonth() + 1), pad(dateObj.getDate()), dateObj.getFullYear()].join('/');
 	    }
 	  }, {
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      if (this.props.schedules === undefined || this.props.length === 0) {
-	        return _react2.default.createElement("div", { className: "loader" });
+	        return _react2.default.createElement('div', { className: 'loader' });
 	      } else {
 	        return _react2.default.createElement(
-	          "div",
+	          'div',
 	          null,
-	          this.displaySchedule()
+	          this.displaySchedule(),
+	          _react2.default.createElement(_reminder_container2.default, { schedules: this._displaySchedule() })
 	        );
 	      }
 	    }
@@ -27870,6 +27889,100 @@
 	}(_react2.default.Component);
 	
 	exports.default = Schedule;
+
+/***/ },
+/* 333 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _reactRedux = __webpack_require__(318);
+	
+	var _reminder = __webpack_require__(334);
+	
+	var _reminder2 = _interopRequireDefault(_reminder);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapStateToProps = function mapStateToProps(state, ownProps) {
+	  return { schedules: ownProps.schedules };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {};
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_reminder2.default);
+
+/***/ },
+/* 334 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Reminder = function (_React$Component) {
+	  _inherits(Reminder, _React$Component);
+	
+	  function Reminder(props) {
+	    _classCallCheck(this, Reminder);
+	
+	    return _possibleConstructorReturn(this, (Reminder.__proto__ || Object.getPrototypeOf(Reminder)).call(this, props));
+	  }
+	
+	  _createClass(Reminder, [{
+	    key: 'render',
+	    value: function render() {
+	      if (this.props.schedules) {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'reminder-list' },
+	          _react2.default.createElement(
+	            'h1',
+	            null,
+	            'Setup Chrome Reminders'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            this.props.schedules[0],
+	            _react2.default.createElement('br', null),
+	            this.props.schedules[1],
+	            ':',
+	            this.props.schedules[2]
+	          )
+	        );
+	      } else {
+	        return _react2.default.createElement('span', null);
+	      }
+	    }
+	  }]);
+	
+	  return Reminder;
+	}(_react2.default.Component);
+	
+	exports.default = Reminder;
 
 /***/ }
 /******/ ]);

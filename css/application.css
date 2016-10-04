@@ -1,6 +1,7 @@
 @import 'address.css';
 @import 'schedule.css';
 @import 'map.css';
+@import 'reminder.css';
 
 html, body, header, footer, section, article, div,
 strong, a, img, p, h1, h2, h3, time, small,
@@ -58,6 +59,7 @@ form, label, input, textarea, button {
   width: 10px;
   height: 10px;
   animation: spin 0.5s linear infinite;
+  margin-left: 10px;
 }
 
 @keyframes spin {

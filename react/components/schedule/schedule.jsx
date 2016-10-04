@@ -1,4 +1,5 @@
 import React from 'react';
+import ReminderContainer from '../reminder/reminder_container';
 
 Date.prototype.addDays = function(days){
   this.setDate(this.getDate() + parseInt(days));
@@ -12,6 +13,7 @@ class Schedule extends React.Component {
     this.state = {
       schedules: []
     };
+
     this.week = {
                  "Sun" : 0,
                  "Mon" : 1,
@@ -22,6 +24,7 @@ class Schedule extends React.Component {
                  "Sat" : 6 };
     this.filterSchedules = this.filterSchedules.bind(this);
     this.getCurrentWeekNumber = this.getCurrentWeekNumber.bind(this);
+    this._displaySchedule = this._displaySchedule.bind(this);
   }
 
   componentDidMount(){
@@ -120,14 +123,20 @@ class Schedule extends React.Component {
         <div className='street-cleaning-info'>
           <h1>Next Street Cleaning:</h1>
           <ol>
-            {this.setupSchedule(this.schedules)}
+            {this.setupSchedule(this.schedules, 'FORSCHEDULE')}
           </ol>
         </div>
       );
     }
   }
 
-  setupSchedule(obj){
+  _displaySchedule(){
+    if(this.schedules !== undefined){
+      return this.setupSchedule(this.schedules, "FORREMINDER");
+    }
+  }
+
+  setupSchedule(obj, condition){
     let week = obj[0];
     let schedule = obj[1];
     let day = schedule['WEEKDAY'];
@@ -137,16 +146,21 @@ class Schedule extends React.Component {
     let nextDate = new Date();
     let currentDay = nextDate.getUTCDay();
     nextDate.addDays(7 * week + (this.week[day] - currentDay));
+    let date = this._convertDate(nextDate);
 
-    return (
-      <div className='street-cleaning-schedule'>
-        <li type='A'>
-          {this._convertDate(nextDate)}
-          <br />
-          {`${day}, ${fromHour} - ${toHour}`}
-        </li>
-      </div>
-    );
+    if(condition === 'FORSCHEDULE'){
+      return (
+        <div className='street-cleaning-schedule'>
+          <li type='A'>
+            {date}
+            <br />
+            {`${day}, ${fromHour} - ${toHour}`}
+          </li>
+        </div>
+      );
+    } else {
+      return [date, fromHour, toHour];
+    }
   }
 
   _convertDate(dateObj) {
@@ -161,9 +175,10 @@ class Schedule extends React.Component {
       );
     } else {
       return(
-        <div>
-          {this.displaySchedule()}
-        </div>
+          <div>
+            {this.displaySchedule()}
+            <ReminderContainer schedules={this._displaySchedule()}/>
+          </div>
       );
     }
   }

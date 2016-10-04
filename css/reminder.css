@@ -1,0 +1,8 @@
+.reminder-list > h1 {
+  font-weight: bold;
+  padding-left: 10px
+}
+
+.reminder-list > div {
+  padding-left: 20px;
+}
