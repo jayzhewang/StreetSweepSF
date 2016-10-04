@@ -145,7 +145,7 @@ class Address extends React.Component {
         return(
           <div className='address-list-container' key={`address${i}`}>
             <div className='list-container'>
-              <li type='circle' >
+              <li type='A' >
                 {address}
               </li>
             </div>
@@ -170,7 +170,7 @@ class Address extends React.Component {
       });
 
       return(
-        <ul>{addressArr}</ul>
+        <ol>{addressArr}</ol>
       );
     }
   }

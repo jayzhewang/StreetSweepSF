@@ -27384,7 +27384,7 @@
 	              { className: 'list-container' },
 	              _react2.default.createElement(
 	                'li',
-	                { type: 'circle' },
+	                { type: 'A' },
 	                address
 	              )
 	            ),
@@ -27416,7 +27416,7 @@
 	        });
 	
 	        return _react2.default.createElement(
-	          'ul',
+	          'ol',
 	          null,
 	          addressArr
 	        );
@@ -27804,8 +27804,17 @@
 	      } else {
 	        return _react2.default.createElement(
 	          "div",
-	          null,
-	          this.setupSchedule(this.schedules)
+	          { className: "street-cleaning-info" },
+	          _react2.default.createElement(
+	            "h1",
+	            null,
+	            "Next Street Cleaning:"
+	          ),
+	          _react2.default.createElement(
+	            "ol",
+	            null,
+	            this.setupSchedule(this.schedules)
+	          )
 	        );
 	      }
 	    }
@@ -27824,15 +27833,10 @@
 	
 	      return _react2.default.createElement(
 	        "div",
-	        { className: "street-cleaning-info" },
+	        { className: "street-cleaning-schedule" },
 	        _react2.default.createElement(
-	          "h1",
-	          null,
-	          "Next Street Cleaning:"
-	        ),
-	        _react2.default.createElement(
-	          "div",
-	          { className: "street-cleaning-schedule" },
+	          "li",
+	          { type: "A" },
 	          this._convertDate(nextDate),
 	          _react2.default.createElement("br", null),
 	          day + ", " + fromHour + " - " + toHour

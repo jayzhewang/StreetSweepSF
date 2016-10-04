@@ -18,7 +18,8 @@
   padding: 5px 0 5px 10px;
 }
 
-.street-cleaning-info {
+.street-cleaning-info > ol {
+  padding: 0 0 0 25px;
 }
 
 .street-cleaning-info > h1{

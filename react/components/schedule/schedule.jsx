@@ -117,8 +117,11 @@ class Schedule extends React.Component {
       );
     } else {
       return (
-        <div>
-          {this.setupSchedule(this.schedules)}
+        <div className='street-cleaning-info'>
+          <h1>Next Street Cleaning:</h1>
+          <ol>
+            {this.setupSchedule(this.schedules)}
+          </ol>
         </div>
       );
     }
@@ -136,14 +139,13 @@ class Schedule extends React.Component {
     nextDate.addDays(7 * week + (this.week[day] - currentDay));
 
     return (
-        <div className='street-cleaning-info'>
-          <h1>Next Street Cleaning:</h1>
-          <div className='street-cleaning-schedule'>
-            {this._convertDate(nextDate)}
-            <br />
-            {`${day}, ${fromHour} - ${toHour}`}
-          </div>
-        </div>
+      <div className='street-cleaning-schedule'>
+        <li type='A'>
+          {this._convertDate(nextDate)}
+          <br />
+          {`${day}, ${fromHour} - ${toHour}`}
+        </li>
+      </div>
     );
   }
 
