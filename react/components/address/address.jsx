@@ -89,7 +89,7 @@ class Address extends React.Component {
   }
 
   addressesInputLink(){
-    if(this.state.showAddressInputLink === true){
+    if(this.state.showAddressInputLink){
       return (
         <div className='address-input-link'
              onClick={this.showAddressInput}>
@@ -105,7 +105,7 @@ class Address extends React.Component {
   }
 
   addressInput(){
-    if(this.state.showAddressInput === true){
+    if(this.state.showAddressInput){
       return (
         <form onSubmit={this.submitAddress}>
           <input type='text'
@@ -178,7 +178,7 @@ class Address extends React.Component {
 //Schedules-------------------------------------------------------------
 
   schedules(){
-    if(this.state.showSchedules === true){
+    if(this.state.showSchedules){
       return(
         <div className='schedules-list'>
           <ScheduleContainer addresses={this.addresses}/>
@@ -193,7 +193,7 @@ class Address extends React.Component {
   }
 
   schedulesLink(){
-    if(this.state.showSchedulesLink === true &&
+    if(this.state.showSchedulesLink &&
        this.props.addresses.length !== 0){
       return(
         <div onClick={this.showSchedules} className='schedules-get'>
@@ -209,13 +209,12 @@ class Address extends React.Component {
 
   toggleMap(address, e){
     e.preventDefault();
-    window.console.log(this.props);
     this.setState({mapCoords: this.props.geocoders,
                    showMap: true});
   }
 
   showMap(){
-    if(this.state.showMap === true){
+    if(this.state.showMap){
       return (
         <Map position={this.state.mapCoords} />
       );
@@ -227,7 +226,7 @@ class Address extends React.Component {
   }
 
   showClose(){
-    if(this.state.showMap === true){
+    if(this.state.showMap){
       return(
         <span onClick={this.closeMap}>
           <img src='../../../assets/icons/icon-close-map.png'

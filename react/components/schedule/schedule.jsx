@@ -1,5 +1,10 @@
 import React from 'react';
 
+Date.prototype.addDays = function(days){
+  this.setDate(this.getDate() + parseInt(days));
+  return this;
+};
+
 class Schedule extends React.Component {
   constructor(props){
     super(props);
@@ -7,7 +12,14 @@ class Schedule extends React.Component {
     this.state = {
       schedules: []
     };
-
+    this.week = {
+                 "Sun" : 0,
+                 "Mon" : 1,
+                 "Tues" : 2,
+                 "Wed" : 3,
+                 "Thu" : 4,
+                 "Fri" : 5,
+                 "Sat" : 6 };
     this.filterSchedules = this.filterSchedules.bind(this);
     this.getCurrentWeekNumber = this.getCurrentWeekNumber.bind(this);
   }
@@ -22,8 +34,8 @@ class Schedule extends React.Component {
     if(this.props.schedules !== undefined &&
        this.state.schedules.length === 0){
         let filtered = this.filterSchedules(this.props.schedules);
-        window.console.log(this.props);
-        if(filtered.length !== 0 && filtered.length !== this.state.schedules.length){
+        if(filtered.length !== 0 &&
+           filtered.length !== this.state.schedules.length){
           this.schedules = filtered;
           this.setState({schedules: filtered});
         }
@@ -31,32 +43,57 @@ class Schedule extends React.Component {
   }
 
   filterSchedules(schedules){
-    let week = {
-                 "Sun" : 0,
-                 "Mon" : 1,
-                 "Tues" : 2,
-                 "Wed" : 3,
-                 "Thu" : 4,
-                 "Fri" : 5,
-                 "Sat" : 6 };
-    let currentWeekNum = this.getCurrentWeekNumber();
-    let currentDay = new Date();
-
+    let earliestSchedule = "Nothing";
     if (schedules.length === 0){
       return [];
     } else {
-      for(let i = 0; i < schedules.length; i ++){
-        let weekMethod = `WEEK${currentWeekNum}OFMON`;
-        let day = week[schedules[i]["WEEKDAY"]];
+      earliestSchedule = this._filter(schedules, this.week, earliestSchedule);
+      if (earliestSchedule[1] === "Nothing"){
+        earliestSchedule = this._filterNextWeeks(schedules, this.week, earliestSchedule[1], 1);
+      }
 
-        if (schedules[i][weekMethod] === "Y"){
-          if(day > currentDay.getUTCDay()){
-            return [schedules[i]];
-          }
+      if (earliestSchedule[1] === "Nothing"){
+        earliestSchedule = this._filterNextWeeks(schedules, this.week, earliestSchedule[1], 2);
+      }
+      return earliestSchedule;
+    }
+  }
+
+  _filter(schedules, week, earliestSchedule){
+    let currentWeekNum = this.getCurrentWeekNumber();
+    let currentDay = new Date();
+
+    for(let i = 0; i < schedules.length; i ++){
+      let weekMethod = `WEEK${currentWeekNum}OFMON`;
+      let day = week[schedules[i]["WEEKDAY"]];
+      if (schedules[i][weekMethod] === "Y" &&
+          day > currentDay.getUTCDay()){
+        if (earliestSchedule === "Nothing"){
+          earliestSchedule = schedules[i];
+        } else if (day < week[earliestSchedule["WEEKDAY"]]){
+          earliestSchedule = schedules[i];
         }
       }
-      return "Nothing";
     }
+    return [0, earliestSchedule];
+  }
+
+  _filterNextWeeks(schedules, week, earliestSchedule, plusAmount){
+    let currentWeekNum = this.getCurrentWeekNumber() + plusAmount;
+    let currentDay = new Date();
+
+    for(let i = 0; i < schedules.length; i ++){
+      let weekMethod = `WEEK${currentWeekNum}OFMON`;
+      let day = week[schedules[i]["WEEKDAY"]];
+      if (schedules[i][weekMethod] === "Y"){
+        if (earliestSchedule === "Nothing"){
+          earliestSchedule = schedules[i];
+        } else if (day < week[earliestSchedule["WEEKDAY"]]){
+          earliestSchedule = schedules[i];
+        }
+      }
+    }
+    return [plusAmount, earliestSchedule];
   }
 
   getCurrentWeekNumber(){
@@ -88,23 +125,31 @@ class Schedule extends React.Component {
   }
 
   setupSchedule(obj){
-    let day = obj['WEEKDAY'];
-    let fromHour = obj['FROMHOUR'];
-    let toHour = obj['TOHOUR'];
+    let week = obj[0];
+    let schedule = obj[1];
+    let day = schedule['WEEKDAY'];
+    let fromHour = schedule['FROMHOUR'];
+    let toHour = schedule['TOHOUR'];
 
-    if(obj === 'Nothing'){
-      return (
-        <div>
-          No street cleaning this week!
+    let nextDate = new Date();
+    let currentDay = nextDate.getUTCDay();
+    nextDate.addDays(7 * week + (this.week[day] - currentDay));
+
+    return (
+        <div className='street-cleaning-info'>
+          <h1>Next Street Cleaning:</h1>
+          <div className='street-cleaning-schedule'>
+            {this._convertDate(nextDate)}
+            <br />
+            {`${day}, ${fromHour} - ${toHour}`}
+          </div>
         </div>
-      );
-    } else {
-      return (
-        <div>
-          {`${day}, ${fromHour} - ${toHour}`}
-        </div>
-      );
-    }
+    );
+  }
+
+  _convertDate(dateObj) {
+    function pad(s) { return (s < 10) ? '0' + s : s; }
+    return [pad(dateObj.getMonth()+1), pad(dateObj.getDate()), dateObj.getFullYear()].join('/');
   }
 
   render(){

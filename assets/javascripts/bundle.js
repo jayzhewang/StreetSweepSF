@@ -27312,7 +27312,7 @@
 	  }, {
 	    key: 'addressesInputLink',
 	    value: function addressesInputLink() {
-	      if (this.state.showAddressInputLink === true) {
+	      if (this.state.showAddressInputLink) {
 	        return _react2.default.createElement(
 	          'div',
 	          { className: 'address-input-link',
@@ -27330,7 +27330,7 @@
 	  }, {
 	    key: 'addressInput',
 	    value: function addressInput() {
-	      if (this.state.showAddressInput === true) {
+	      if (this.state.showAddressInput) {
 	        return _react2.default.createElement(
 	          'form',
 	          { onSubmit: this.submitAddress },
@@ -27428,7 +27428,7 @@
 	  }, {
 	    key: 'schedules',
 	    value: function schedules() {
-	      if (this.state.showSchedules === true) {
+	      if (this.state.showSchedules) {
 	        return _react2.default.createElement(
 	          'div',
 	          { className: 'schedules-list' },
@@ -27445,7 +27445,7 @@
 	  }, {
 	    key: 'schedulesLink',
 	    value: function schedulesLink() {
-	      if (this.state.showSchedulesLink === true && this.props.addresses.length !== 0) {
+	      if (this.state.showSchedulesLink && this.props.addresses.length !== 0) {
 	        return _react2.default.createElement(
 	          'div',
 	          { onClick: this.showSchedules, className: 'schedules-get' },
@@ -27464,14 +27464,13 @@
 	    key: 'toggleMap',
 	    value: function toggleMap(address, e) {
 	      e.preventDefault();
-	      window.console.log(this.props);
 	      this.setState({ mapCoords: this.props.geocoders,
 	        showMap: true });
 	    }
 	  }, {
 	    key: 'showMap',
 	    value: function showMap() {
-	      if (this.state.showMap === true) {
+	      if (this.state.showMap) {
 	        return _react2.default.createElement(_map2.default, { position: this.state.mapCoords });
 	      }
 	    }
@@ -27483,7 +27482,7 @@
 	  }, {
 	    key: 'showClose',
 	    value: function showClose() {
-	      if (this.state.showMap === true) {
+	      if (this.state.showMap) {
 	        return _react2.default.createElement(
 	          'span',
 	          { onClick: this.closeMap },
@@ -27677,6 +27676,11 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
+	Date.prototype.addDays = function (days) {
+	  this.setDate(this.getDate() + parseInt(days));
+	  return this;
+	};
+	
 	var Schedule = function (_React$Component) {
 	  _inherits(Schedule, _React$Component);
 	
@@ -27689,7 +27693,14 @@
 	    _this.state = {
 	      schedules: []
 	    };
-	
+	    _this.week = {
+	      "Sun": 0,
+	      "Mon": 1,
+	      "Tues": 2,
+	      "Wed": 3,
+	      "Thu": 4,
+	      "Fri": 5,
+	      "Sat": 6 };
 	    _this.filterSchedules = _this.filterSchedules.bind(_this);
 	    _this.getCurrentWeekNumber = _this.getCurrentWeekNumber.bind(_this);
 	    return _this;
@@ -27709,7 +27720,6 @@
 	    value: function componentDidUpdate() {
 	      if (this.props.schedules !== undefined && this.state.schedules.length === 0) {
 	        var filtered = this.filterSchedules(this.props.schedules);
-	        window.console.log(this.props);
 	        if (filtered.length !== 0 && filtered.length !== this.state.schedules.length) {
 	          this.schedules = filtered;
 	          this.setState({ schedules: filtered });
@@ -27719,32 +27729,58 @@
 	  }, {
 	    key: "filterSchedules",
 	    value: function filterSchedules(schedules) {
-	      var week = {
-	        "Sun": 0,
-	        "Mon": 1,
-	        "Tues": 2,
-	        "Wed": 3,
-	        "Thu": 4,
-	        "Fri": 5,
-	        "Sat": 6 };
-	      var currentWeekNum = this.getCurrentWeekNumber();
-	      var currentDay = new Date();
-	
+	      var earliestSchedule = "Nothing";
 	      if (schedules.length === 0) {
 	        return [];
 	      } else {
-	        for (var i = 0; i < schedules.length; i++) {
-	          var weekMethod = "WEEK" + currentWeekNum + "OFMON";
-	          var day = week[schedules[i]["WEEKDAY"]];
+	        earliestSchedule = this._filter(schedules, this.week, earliestSchedule);
+	        if (earliestSchedule[1] === "Nothing") {
+	          earliestSchedule = this._filterNextWeeks(schedules, this.week, earliestSchedule[1], 1);
+	        }
 	
-	          if (schedules[i][weekMethod] === "Y") {
-	            if (day > currentDay.getUTCDay()) {
-	              return [schedules[i]];
-	            }
+	        if (earliestSchedule[1] === "Nothing") {
+	          earliestSchedule = this._filterNextWeeks(schedules, this.week, earliestSchedule[1], 2);
+	        }
+	        return earliestSchedule;
+	      }
+	    }
+	  }, {
+	    key: "_filter",
+	    value: function _filter(schedules, week, earliestSchedule) {
+	      var currentWeekNum = this.getCurrentWeekNumber();
+	      var currentDay = new Date();
+	
+	      for (var i = 0; i < schedules.length; i++) {
+	        var weekMethod = "WEEK" + currentWeekNum + "OFMON";
+	        var day = week[schedules[i]["WEEKDAY"]];
+	        if (schedules[i][weekMethod] === "Y" && day > currentDay.getUTCDay()) {
+	          if (earliestSchedule === "Nothing") {
+	            earliestSchedule = schedules[i];
+	          } else if (day < week[earliestSchedule["WEEKDAY"]]) {
+	            earliestSchedule = schedules[i];
 	          }
 	        }
-	        return "Nothing";
 	      }
+	      return [0, earliestSchedule];
+	    }
+	  }, {
+	    key: "_filterNextWeeks",
+	    value: function _filterNextWeeks(schedules, week, earliestSchedule, plusAmount) {
+	      var currentWeekNum = this.getCurrentWeekNumber() + plusAmount;
+	      var currentDay = new Date();
+	
+	      for (var i = 0; i < schedules.length; i++) {
+	        var weekMethod = "WEEK" + currentWeekNum + "OFMON";
+	        var day = week[schedules[i]["WEEKDAY"]];
+	        if (schedules[i][weekMethod] === "Y") {
+	          if (earliestSchedule === "Nothing") {
+	            earliestSchedule = schedules[i];
+	          } else if (day < week[earliestSchedule["WEEKDAY"]]) {
+	            earliestSchedule = schedules[i];
+	          }
+	        }
+	      }
+	      return [plusAmount, earliestSchedule];
 	    }
 	  }, {
 	    key: "getCurrentWeekNumber",
@@ -27776,23 +27812,40 @@
 	  }, {
 	    key: "setupSchedule",
 	    value: function setupSchedule(obj) {
-	      var day = obj['WEEKDAY'];
-	      var fromHour = obj['FROMHOUR'];
-	      var toHour = obj['TOHOUR'];
+	      var week = obj[0];
+	      var schedule = obj[1];
+	      var day = schedule['WEEKDAY'];
+	      var fromHour = schedule['FROMHOUR'];
+	      var toHour = schedule['TOHOUR'];
 	
-	      if (obj === 'Nothing') {
-	        return _react2.default.createElement(
-	          "div",
+	      var nextDate = new Date();
+	      var currentDay = nextDate.getUTCDay();
+	      nextDate.addDays(7 * week + (this.week[day] - currentDay));
+	
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "street-cleaning-info" },
+	        _react2.default.createElement(
+	          "h1",
 	          null,
-	          "No street cleaning this week!"
-	        );
-	      } else {
-	        return _react2.default.createElement(
+	          "Next Street Cleaning:"
+	        ),
+	        _react2.default.createElement(
 	          "div",
-	          null,
+	          { className: "street-cleaning-schedule" },
+	          this._convertDate(nextDate),
+	          _react2.default.createElement("br", null),
 	          day + ", " + fromHour + " - " + toHour
-	        );
+	        )
+	      );
+	    }
+	  }, {
+	    key: "_convertDate",
+	    value: function _convertDate(dateObj) {
+	      function pad(s) {
+	        return s < 10 ? '0' + s : s;
 	      }
+	      return [pad(dateObj.getMonth() + 1), pad(dateObj.getDate()), dateObj.getFullYear()].join('/');
 	    }
 	  }, {
 	    key: "render",
