@@ -58,7 +58,7 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _root = __webpack_require__(317);
+	var _root = __webpack_require__(325);
 	
 	var _root2 = _interopRequireDefault(_root);
 	
@@ -21453,7 +21453,7 @@
 	
 	var _root_reducer2 = _interopRequireDefault(_root_reducer);
 	
-	var _root_middleware = __webpack_require__(310);
+	var _root_middleware = __webpack_require__(314);
 	
 	var _root_middleware2 = _interopRequireDefault(_root_middleware);
 	
@@ -22353,11 +22353,7 @@
 	
 	var _geocoder_reducer2 = _interopRequireDefault(_geocoder_reducer);
 	
-	var _notification_reducer = __webpack_require__(338);
-	
-	var _notification_reducer2 = _interopRequireDefault(_notification_reducer);
-	
-	var _alarm_reducer = __webpack_require__(342);
+	var _alarm_reducer = __webpack_require__(312);
 	
 	var _alarm_reducer2 = _interopRequireDefault(_alarm_reducer);
 	
@@ -22367,7 +22363,6 @@
 	  addresses: _address_reducer2.default,
 	  schedules: _schedule_reducer2.default,
 	  geocoders: _geocoder_reducer2.default,
-	  notifications: _notification_reducer2.default,
 	  alarms: _alarm_reducer2.default
 	});
 	
@@ -26151,7 +26146,80 @@
 	};
 
 /***/ },
-/* 310 */
+/* 310 */,
+/* 311 */,
+/* 312 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _alarm_actions = __webpack_require__(313);
+	
+	var AlarmReducer = function AlarmReducer() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case _alarm_actions.AlarmConstants.RECEIVE_ALARMS:
+	      var alarms = action.alarms;
+	      return alarms;
+	    default:
+	      return state;
+	  }
+	};
+	
+	exports.default = AlarmReducer;
+
+/***/ },
+/* 313 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var AlarmConstants = exports.AlarmConstants = {
+	  REQUEST_ALARMS: 'REQUEST_ALARMS',
+	  RECEIVE_ALARMS: 'RECEIVE_ALARMS',
+	  CREATE_ALARM: 'CREATE_ALARM',
+	  CANCEL_ALARM: 'CANCEL_ALARM'
+	};
+	
+	var requestAlarms = exports.requestAlarms = function requestAlarms() {
+	  return {
+	    type: AlarmConstants.REQUEST_ALARMS
+	  };
+	};
+	
+	var receiveAlarms = exports.receiveAlarms = function receiveAlarms(alarms) {
+	  return {
+	    type: AlarmConstants.RECEIVE_ALARMS,
+	    alarms: alarms
+	  };
+	};
+	
+	var createAlarm = exports.createAlarm = function createAlarm(name, times) {
+	  return {
+	    type: AlarmConstants.CREATE_ALARM,
+	    name: name,
+	    times: times
+	  };
+	};
+	
+	var cancelAlarm = exports.cancelAlarm = function cancelAlarm(name) {
+	  return {
+	    type: AlarmConstants.CANCEL_ALARM,
+	    name: name
+	  };
+	};
+
+/***/ },
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26162,34 +26230,30 @@
 	
 	var _redux = __webpack_require__(173);
 	
-	var _address_middleware = __webpack_require__(311);
+	var _address_middleware = __webpack_require__(315);
 	
 	var _address_middleware2 = _interopRequireDefault(_address_middleware);
 	
-	var _schedule_middleware = __webpack_require__(313);
+	var _schedule_middleware = __webpack_require__(317);
 	
 	var _schedule_middleware2 = _interopRequireDefault(_schedule_middleware);
 	
-	var _geocoder_middleware = __webpack_require__(315);
+	var _geocoder_middleware = __webpack_require__(319);
 	
 	var _geocoder_middleware2 = _interopRequireDefault(_geocoder_middleware);
 	
-	var _notification_middleware = __webpack_require__(335);
-	
-	var _notification_middleware2 = _interopRequireDefault(_notification_middleware);
-	
-	var _alarm_middleware = __webpack_require__(339);
+	var _alarm_middleware = __webpack_require__(323);
 	
 	var _alarm_middleware2 = _interopRequireDefault(_alarm_middleware);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var RootMiddleware = (0, _redux.applyMiddleware)(_address_middleware2.default, _schedule_middleware2.default, _geocoder_middleware2.default, _notification_middleware2.default, _alarm_middleware2.default);
+	var RootMiddleware = (0, _redux.applyMiddleware)(_address_middleware2.default, _schedule_middleware2.default, _geocoder_middleware2.default, _alarm_middleware2.default);
 	
 	exports.default = RootMiddleware;
 
 /***/ },
-/* 311 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26200,7 +26264,7 @@
 	
 	var _address_actions = __webpack_require__(189);
 	
-	var _chrome_api_util = __webpack_require__(312);
+	var _chrome_api_util = __webpack_require__(316);
 	
 	var AddressMiddleware = function AddressMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -26228,7 +26292,7 @@
 	exports.default = AddressMiddleware;
 
 /***/ },
-/* 312 */
+/* 316 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26245,7 +26309,7 @@
 	};
 
 /***/ },
-/* 313 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26256,9 +26320,9 @@
 	
 	var _schedule_actions = __webpack_require__(307);
 	
-	var _chrome_api_util = __webpack_require__(312);
+	var _chrome_api_util = __webpack_require__(316);
 	
-	var _rails_api_util = __webpack_require__(314);
+	var _rails_api_util = __webpack_require__(318);
 	
 	var ScheduleMiddleware = function ScheduleMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -26284,7 +26348,7 @@
 	exports.default = ScheduleMiddleware;
 
 /***/ },
-/* 314 */
+/* 318 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26302,7 +26366,7 @@
 	};
 
 /***/ },
-/* 315 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26313,7 +26377,7 @@
 	
 	var _geocoder_actions = __webpack_require__(309);
 	
-	var _geocoder_api_util = __webpack_require__(316);
+	var _geocoder_api_util = __webpack_require__(320);
 	
 	var GeocoderMiddleware = function GeocoderMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -26338,7 +26402,7 @@
 	exports.default = GeocoderMiddleware;
 
 /***/ },
-/* 316 */
+/* 320 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26356,7 +26420,74 @@
 	};
 
 /***/ },
-/* 317 */
+/* 321 */,
+/* 322 */,
+/* 323 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _alarm_actions = __webpack_require__(313);
+	
+	var _alarm_api_util = __webpack_require__(324);
+	
+	var AlarmMiddleware = function AlarmMiddleware(_ref) {
+	  var getState = _ref.getState;
+	  var dispatch = _ref.dispatch;
+	  return function (next) {
+	    return function (action) {
+	      switch (action.type) {
+	        case _alarm_actions.AlarmConstants.REQUEST_ALARMS:
+	          var success = function success(alarms) {
+	            return dispatch((0, _alarm_actions.receiveAlarms)(alarms));
+	          };
+	          (0, _alarm_api_util.fetchAlarmsAPI)(success);
+	          return next(action);
+	        case _alarm_actions.AlarmConstants.CREATE_ALARM:
+	          var name = action.name;
+	          var times = action.times;
+	          (0, _alarm_api_util.createAlarmAPI)(name, times);
+	          return next(action);
+	        case _alarm_actions.AlarmConstants.CANCEL_ALARM:
+	          var name1 = action.name;
+	          (0, _alarm_api_util.cancelAlarmAPI)(name1);
+	          return next(action);
+	        default:
+	          return next(action);
+	      }
+	    };
+	  };
+	};
+	
+	exports.default = AlarmMiddleware;
+
+/***/ },
+/* 324 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var fetchAlarmsAPI = exports.fetchAlarmsAPI = function fetchAlarmsAPI(successFunction) {
+	  chrome.alarms.getAll(successFunction);
+	};
+	
+	var createAlarmAPI = exports.createAlarmAPI = function createAlarmAPI(alarmName, times) {
+	  chrome.alarms.create(alarmName, times);
+	};
+	
+	var cancelAlarmAPI = exports.cancelAlarmAPI = function cancelAlarmAPI(alarmName) {
+	  chrome.alarms.clear(alarmName);
+	};
+
+/***/ },
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26369,9 +26500,9 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactRedux = __webpack_require__(318);
+	var _reactRedux = __webpack_require__(326);
 	
-	var _app = __webpack_require__(327);
+	var _app = __webpack_require__(335);
 	
 	var _app2 = _interopRequireDefault(_app);
 	
@@ -26389,7 +26520,7 @@
 	exports.default = Root;
 
 /***/ },
-/* 318 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26397,11 +26528,11 @@
 	exports.__esModule = true;
 	exports.connect = exports.Provider = undefined;
 	
-	var _Provider = __webpack_require__(319);
+	var _Provider = __webpack_require__(327);
 	
 	var _Provider2 = _interopRequireDefault(_Provider);
 	
-	var _connect = __webpack_require__(322);
+	var _connect = __webpack_require__(330);
 	
 	var _connect2 = _interopRequireDefault(_connect);
 	
@@ -26411,7 +26542,7 @@
 	exports.connect = _connect2["default"];
 
 /***/ },
-/* 319 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26421,11 +26552,11 @@
 	
 	var _react = __webpack_require__(1);
 	
-	var _storeShape = __webpack_require__(320);
+	var _storeShape = __webpack_require__(328);
 	
 	var _storeShape2 = _interopRequireDefault(_storeShape);
 	
-	var _warning = __webpack_require__(321);
+	var _warning = __webpack_require__(329);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -26495,7 +26626,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 320 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26511,7 +26642,7 @@
 	});
 
 /***/ },
-/* 321 */
+/* 329 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26540,7 +26671,7 @@
 	}
 
 /***/ },
-/* 322 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26552,19 +26683,19 @@
 	
 	var _react = __webpack_require__(1);
 	
-	var _storeShape = __webpack_require__(320);
+	var _storeShape = __webpack_require__(328);
 	
 	var _storeShape2 = _interopRequireDefault(_storeShape);
 	
-	var _shallowEqual = __webpack_require__(323);
+	var _shallowEqual = __webpack_require__(331);
 	
 	var _shallowEqual2 = _interopRequireDefault(_shallowEqual);
 	
-	var _wrapActionCreators = __webpack_require__(324);
+	var _wrapActionCreators = __webpack_require__(332);
 	
 	var _wrapActionCreators2 = _interopRequireDefault(_wrapActionCreators);
 	
-	var _warning = __webpack_require__(321);
+	var _warning = __webpack_require__(329);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -26572,11 +26703,11 @@
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _hoistNonReactStatics = __webpack_require__(325);
+	var _hoistNonReactStatics = __webpack_require__(333);
 	
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 	
-	var _invariant = __webpack_require__(326);
+	var _invariant = __webpack_require__(334);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -26939,7 +27070,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 323 */
+/* 331 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26970,7 +27101,7 @@
 	}
 
 /***/ },
-/* 324 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26987,7 +27118,7 @@
 	}
 
 /***/ },
-/* 325 */
+/* 333 */
 /***/ function(module, exports) {
 
 	/**
@@ -27043,7 +27174,7 @@
 
 
 /***/ },
-/* 326 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27101,7 +27232,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 327 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27114,7 +27245,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _address_container = __webpack_require__(328);
+	var _address_container = __webpack_require__(336);
 	
 	var _address_container2 = _interopRequireDefault(_address_container);
 	
@@ -27151,7 +27282,7 @@
 	exports.default = App;
 
 /***/ },
-/* 328 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27160,9 +27291,9 @@
 	  value: true
 	});
 	
-	var _reactRedux = __webpack_require__(318);
+	var _reactRedux = __webpack_require__(326);
 	
-	var _address = __webpack_require__(329);
+	var _address = __webpack_require__(337);
 	
 	var _address2 = _interopRequireDefault(_address);
 	
@@ -27195,7 +27326,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_address2.default);
 
 /***/ },
-/* 329 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27210,11 +27341,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _map = __webpack_require__(330);
+	var _map = __webpack_require__(338);
 	
 	var _map2 = _interopRequireDefault(_map);
 	
-	var _schedule_container = __webpack_require__(331);
+	var _schedule_container = __webpack_require__(339);
 	
 	var _schedule_container2 = _interopRequireDefault(_schedule_container);
 	
@@ -27565,7 +27696,7 @@
 	exports.default = Address;
 
 /***/ },
-/* 330 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27634,7 +27765,7 @@
 	exports.default = Map;
 
 /***/ },
-/* 331 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27643,9 +27774,9 @@
 	  value: true
 	});
 	
-	var _reactRedux = __webpack_require__(318);
+	var _reactRedux = __webpack_require__(326);
 	
-	var _schedule = __webpack_require__(332);
+	var _schedule = __webpack_require__(340);
 	
 	var _schedule2 = _interopRequireDefault(_schedule);
 	
@@ -27671,7 +27802,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_schedule2.default);
 
 /***/ },
-/* 332 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27686,7 +27817,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reminder_container = __webpack_require__(333);
+	var _reminder_container = __webpack_require__(341);
 	
 	var _reminder_container2 = _interopRequireDefault(_reminder_container);
 	
@@ -27909,7 +28040,7 @@
 	exports.default = Schedule;
 
 /***/ },
-/* 333 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27918,9 +28049,9 @@
 	  value: true
 	});
 	
-	var _reactRedux = __webpack_require__(318);
+	var _reactRedux = __webpack_require__(326);
 	
-	var _reminder = __webpack_require__(334);
+	var _reminder = __webpack_require__(342);
 	
 	var _reminder2 = _interopRequireDefault(_reminder);
 	
@@ -27937,7 +28068,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_reminder2.default);
 
 /***/ },
-/* 334 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27951,6 +28082,10 @@
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _alarm_container = __webpack_require__(343);
+	
+	var _alarm_container2 = _interopRequireDefault(_alarm_container);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -27989,10 +28124,11 @@
 	            this.props.schedules[1],
 	            ':',
 	            this.props.schedules[2]
-	          )
+	          ),
+	          _react2.default.createElement(_alarm_container2.default, null)
 	        );
 	      } else {
-	        return _react2.default.createElement('span', null);
+	        return _react2.default.createElement(_alarm_container2.default, null);
 	      }
 	    }
 	  }]);
@@ -28003,7 +28139,7 @@
 	exports.default = Reminder;
 
 /***/ },
-/* 335 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28012,97 +28148,40 @@
 	  value: true
 	});
 	
-	var _notification_actions = __webpack_require__(336);
+	var _reactRedux = __webpack_require__(326);
 	
-	var _notification_api_util = __webpack_require__(337);
+	var _alarm = __webpack_require__(344);
 	
-	var NotificationMiddleware = function NotificationMiddleware(_ref) {
-	  var getState = _ref.getState;
-	  var dispatch = _ref.dispatch;
-	  return function (next) {
-	    return function (action) {
-	      switch (action.type) {
-	        case _notification_actions.NotificationConstants.REQUEST_NOTIFICATION:
-	          var success = function success(notifications) {
-	            return dispatch(_notification_actions.receiveNotification);
-	          };
-	          (0, _notification_api_util.fetchNotifications)(success);
-	          return next(action);
-	        case _notification_actions.NotificationConstants.CREATE_NOTIFICATION:
-	          var newNotification = action.newNotification;
-	          (0, _notification_api_util.createNotification)(newNotification);
-	          return next(action);
-	        default:
-	          return next(action);
-	      }
-	    };
+	var _alarm2 = _interopRequireDefault(_alarm);
+	
+	var _alarm_actions = __webpack_require__(313);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    alarms: state.alarms
 	  };
 	};
 	
-	exports.default = NotificationMiddleware;
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    requestAlarms: function requestAlarms() {
+	      return dispatch((0, _alarm_actions.requestAlarms)());
+	    },
+	    createAlarm: function createAlarm(alarmName, times) {
+	      return dispatch((0, _alarm_actions.createAlarm)(alarmName, times));
+	    },
+	    cancelAlarm: function cancelAlarm(alarmName) {
+	      return dispatch((0, _alarm_actions.cancelAlarm)(alarmName));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_alarm2.default);
 
 /***/ },
-/* 336 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var NotificationConstants = exports.NotificationConstants = {
-	  REQUEST_NOTIFICATION: 'REQUEST_NOTIFICATION',
-	  RECEIVE_NOTIFICATION: 'RECEIVE_NOTIFICATION',
-	  CREATE_NOTIFICATION: 'CREATE_NOTIFICATION'
-	};
-	
-	var requestNotification = function requestNotification() {
-	  return {
-	    type: NotificationConstants.REQUEST_NOTIFICATION
-	  };
-	};
-	
-	var receiveNotification = function receiveNotification(notifications) {
-	  return {
-	    type: NotificationConstants.RECEIVE_NOTIFICATION,
-	    notifications: notifications
-	  };
-	};
-	
-	var createNotification = function createNotification(newNotification) {
-	  return {
-	    type: NotificationConstants.CREATE_NOTIFICATION,
-	    newNotification: newNotification
-	  };
-	};
-
-/***/ },
-/* 337 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var fetchNotifications = exports.fetchNotifications = function fetchNotifications(successFunction) {
-	  chrome.storage.sync.get('notifications', successFunction);
-	};
-	
-	var createNotification = exports.createNotification = function createNotification(newNotification) {
-	  var title = newNotification.title;
-	  var message = newNotification.message;
-	
-	  chrome.notifications.create('reminder', {
-	    type: 'basic',
-	    iconUrl: './assets/icons/broom-cross-38.png',
-	    title: title,
-	    message: message
-	  }, function (notificationId) {});
-	};
-
-/***/ },
-/* 338 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28111,158 +28190,99 @@
 	  value: true
 	});
 	
-	var _notification_actions = __webpack_require__(336);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var NotificationReducer = function NotificationReducer() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-	  var action = arguments[1];
+	var _react = __webpack_require__(1);
 	
-	  switch (action.type) {
-	    case _notification_actions.NotificationConstants.RECEIVE_NOTIFICATION:
-	      var notifications = action.notifications;
-	      return notifications;
-	    default:
-	      return state;
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Alarm = function (_React$Component) {
+	  _inherits(Alarm, _React$Component);
+	
+	  function Alarm(props) {
+	    _classCallCheck(this, Alarm);
+	
+	    var _this = _possibleConstructorReturn(this, (Alarm.__proto__ || Object.getPrototypeOf(Alarm)).call(this, props));
+	
+	    _this.alarmName = 'remindme';
+	    return _this;
 	  }
-	};
 	
-	exports.default = NotificationReducer;
-
-/***/ },
-/* 339 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _alarm_actions = __webpack_require__(340);
-	
-	var _alarm_api_util = __webpack_require__(341);
-	
-	var AlarmMiddleware = function AlarmMiddleware(_ref) {
-	  var getState = _ref.getState;
-	  var dispatch = _ref.dispatch;
-	  return function (next) {
-	    return function (action) {
-	      switch (action.type) {
-	        case _alarm_actions.AlarmConstants.REQUEST_ALARMS:
-	          var success = function success(alarms) {
-	            return dispatch((0, _alarm_actions.receiveAlarms)(alarms));
-	          };
-	          (0, _alarm_api_util.fetchAlarmsAPI)(success);
-	          return next(action);
-	        case _alarm_actions.AlarmConstants.CREATE_ALARM:
-	          var name = action.name;
-	          var times = action.times;
-	          (0, _alarm_api_util.createAlarmAPI)(name, times);
-	          return next(action);
-	        case _alarm_actions.AlarmConstants.CANCEL_ALARM:
-	          var name1 = action.name;
-	          (0, _alarm_api_util.cancelAlarmAPI)(name1);
-	          return next(action);
-	        default:
-	          return next(action);
+	  _createClass(Alarm, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.props.requestAlarms();
+	      document.querySelector('#toggleAlarm').addEventListener('click', this.doToggleAlarm.bind(this));
+	      this.checkAlarm();
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      if (this.props.alarms !== undefined) {
+	        this.checkAlarm();
 	      }
-	    };
-	  };
-	};
+	    }
+	  }, {
+	    key: 'checkAlarm',
+	    value: function checkAlarm(callback) {
+	      var _this2 = this;
 	
-	exports.default = AlarmMiddleware;
-
-/***/ },
-/* 340 */
-/***/ function(module, exports) {
-
-	'use strict';
+	      var hasAlarm = this.props.alarms.some(function (a) {
+	        return a.name === _this2.alarmName;
+	      });
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var AlarmConstants = exports.AlarmConstants = {
-	  REQUEST_ALARMS: 'REQUEST_ALARMS',
-	  RECEIVE_ALARMS: 'RECEIVE_ALARMS',
-	  CREATE_ALARM: 'CREATE_ALARM',
-	  CANCEL_ALARM: 'CANCEL_ALARM'
-	};
+	      var newLabel = void 0;
+	      if (hasAlarm) {
+	        newLabel = 'Cancel alarm';
+	      } else {
+	        newLabel = 'Activate alarm';
+	      }
 	
-	var requestAlarms = exports.requestAlarms = function requestAlarms() {
-	  return {
-	    type: AlarmConstants.REQUEST_ALARMS
-	  };
-	};
+	      document.getElementById('toggleAlarm').innerText = newLabel;
+	      if (callback) callback(hasAlarm);
+	    }
+	  }, {
+	    key: 'doToggleAlarm',
+	    value: function doToggleAlarm() {
+	      var _this3 = this;
 	
-	var receiveAlarms = exports.receiveAlarms = function receiveAlarms(alarms) {
-	  return {
-	    type: AlarmConstants.RECEIVE_ALARMS,
-	    alarms: alarms
-	  };
-	};
+	      window.console.log(this);
+	      this.checkAlarm(function (hasAlarm) {
+	        if (hasAlarm) {
+	          _this3.props.cancelAlarm(_this3.alarmName);
+	        } else {
+	          _this3.props.createAlarm(_this3.alarmName, { delayInMinutes: 0.1, periodInMinutes: 0.1 });
+	        }
+	        _this3.checkAlarm();
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { id: 'info' },
+	        _react2.default.createElement(
+	          'button',
+	          { id: 'toggleAlarm' },
+	          'Activate alarm'
+	        )
+	      );
+	    }
+	  }]);
 	
-	var createAlarm = exports.createAlarm = function createAlarm(name, times) {
-	  return {
-	    type: AlarmConstants.CREATE_ALARM,
-	    name: name,
-	    times: times
-	  };
-	};
+	  return Alarm;
+	}(_react2.default.Component);
 	
-	var cancelAlarm = exports.cancelAlarm = function cancelAlarm(name) {
-	  return {
-	    type: AlarmConstants.CANCEL_ALARM,
-	    name: name
-	  };
-	};
-
-/***/ },
-/* 341 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var fetchAlarmsAPI = exports.fetchAlarmsAPI = function fetchAlarmsAPI(successFunction) {
-	  chrome.alarms.getAll(successFunction);
-	};
-	
-	var createAlarmAPI = exports.createAlarmAPI = function createAlarmAPI(alarmName, times) {
-	  chrome.alarms.create(alarmName, times);
-	};
-	
-	var cancelAlarmAPI = exports.cancelAlarmAPI = function cancelAlarmAPI(alarmName) {
-	  chrome.alarms.clear(alarmName);
-	};
-
-/***/ },
-/* 342 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _alarm_actions = __webpack_require__(340);
-	
-	var AlarmReducer = function AlarmReducer() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-	  var action = arguments[1];
-	
-	  switch (action.type) {
-	    case _alarm_actions.AlarmConstants.RECEIVE_ALARMS:
-	      var alarms = action.alarms;
-	      return alarms;
-	    default:
-	      return state;
-	  }
-	};
-	
-	exports.default = AlarmReducer;
+	exports.default = Alarm;
 
 /***/ }
 /******/ ]);

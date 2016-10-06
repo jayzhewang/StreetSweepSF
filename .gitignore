@@ -1,0 +1,4 @@
+# Ignore webpack and node modules
+node_modules/
+bundle.js
+bundle.js.map
