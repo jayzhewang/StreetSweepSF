@@ -22357,13 +22357,18 @@
 	
 	var _notification_reducer2 = _interopRequireDefault(_notification_reducer);
 	
+	var _alarm_reducer = __webpack_require__(342);
+	
+	var _alarm_reducer2 = _interopRequireDefault(_alarm_reducer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var RootReducer = (0, _redux.combineReducers)({
 	  addresses: _address_reducer2.default,
 	  schedules: _schedule_reducer2.default,
 	  geocoders: _geocoder_reducer2.default,
-	  notifications: _notification_reducer2.default
+	  notifications: _notification_reducer2.default,
+	  alarms: _alarm_reducer2.default
 	});
 	
 	exports.default = RootReducer;
@@ -26173,9 +26178,13 @@
 	
 	var _notification_middleware2 = _interopRequireDefault(_notification_middleware);
 	
+	var _alarm_middleware = __webpack_require__(339);
+	
+	var _alarm_middleware2 = _interopRequireDefault(_alarm_middleware);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var RootMiddleware = (0, _redux.applyMiddleware)(_address_middleware2.default, _schedule_middleware2.default, _geocoder_middleware2.default, _notification_middleware2.default);
+	var RootMiddleware = (0, _redux.applyMiddleware)(_address_middleware2.default, _schedule_middleware2.default, _geocoder_middleware2.default, _notification_middleware2.default, _alarm_middleware2.default);
 	
 	exports.default = RootMiddleware;
 
@@ -28118,6 +28127,142 @@
 	};
 	
 	exports.default = NotificationReducer;
+
+/***/ },
+/* 339 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _alarm_actions = __webpack_require__(340);
+	
+	var _alarm_api_util = __webpack_require__(341);
+	
+	var AlarmMiddleware = function AlarmMiddleware(_ref) {
+	  var getState = _ref.getState;
+	  var dispatch = _ref.dispatch;
+	  return function (next) {
+	    return function (action) {
+	      switch (action.type) {
+	        case _alarm_actions.AlarmConstants.REQUEST_ALARMS:
+	          var success = function success(alarms) {
+	            return dispatch((0, _alarm_actions.receiveAlarms)(alarms));
+	          };
+	          (0, _alarm_api_util.fetchAlarmsAPI)(success);
+	          return next(action);
+	        case _alarm_actions.AlarmConstants.CREATE_ALARM:
+	          var name = action.name;
+	          var times = action.times;
+	          (0, _alarm_api_util.createAlarmAPI)(name, times);
+	          return next(action);
+	        case _alarm_actions.AlarmConstants.CANCEL_ALARM:
+	          var name1 = action.name;
+	          (0, _alarm_api_util.cancelAlarmAPI)(name1);
+	          return next(action);
+	        default:
+	          return next(action);
+	      }
+	    };
+	  };
+	};
+	
+	exports.default = AlarmMiddleware;
+
+/***/ },
+/* 340 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var AlarmConstants = exports.AlarmConstants = {
+	  REQUEST_ALARMS: 'REQUEST_ALARMS',
+	  RECEIVE_ALARMS: 'RECEIVE_ALARMS',
+	  CREATE_ALARM: 'CREATE_ALARM',
+	  CANCEL_ALARM: 'CANCEL_ALARM'
+	};
+	
+	var requestAlarms = exports.requestAlarms = function requestAlarms() {
+	  return {
+	    type: AlarmConstants.REQUEST_ALARMS
+	  };
+	};
+	
+	var receiveAlarms = exports.receiveAlarms = function receiveAlarms(alarms) {
+	  return {
+	    type: AlarmConstants.RECEIVE_ALARMS,
+	    alarms: alarms
+	  };
+	};
+	
+	var createAlarm = exports.createAlarm = function createAlarm(name, times) {
+	  return {
+	    type: AlarmConstants.CREATE_ALARM,
+	    name: name,
+	    times: times
+	  };
+	};
+	
+	var cancelAlarm = exports.cancelAlarm = function cancelAlarm(name) {
+	  return {
+	    type: AlarmConstants.CANCEL_ALARM,
+	    name: name
+	  };
+	};
+
+/***/ },
+/* 341 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var fetchAlarmsAPI = exports.fetchAlarmsAPI = function fetchAlarmsAPI(successFunction) {
+	  chrome.alarms.getAll(successFunction);
+	};
+	
+	var createAlarmAPI = exports.createAlarmAPI = function createAlarmAPI(alarmName, times) {
+	  chrome.alarms.create(alarmName, times);
+	};
+	
+	var cancelAlarmAPI = exports.cancelAlarmAPI = function cancelAlarmAPI(alarmName) {
+	  chrome.alarms.clear(alarmName);
+	};
+
+/***/ },
+/* 342 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _alarm_actions = __webpack_require__(340);
+	
+	var AlarmReducer = function AlarmReducer() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case _alarm_actions.AlarmConstants.RECEIVE_ALARMS:
+	      var alarms = action.alarms;
+	      return alarms;
+	    default:
+	      return state;
+	  }
+	};
+	
+	exports.default = AlarmReducer;
 
 /***/ }
 /******/ ]);
