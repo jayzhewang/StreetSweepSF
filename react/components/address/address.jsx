@@ -1,6 +1,7 @@
 import React from 'react';
 import Map from '../map/map';
 import ScheduleContainer from '../schedule/schedule_container';
+import AlarmContainer from '../alarm/alarm_container';
 
 class Address extends React.Component {
   constructor(props){
@@ -257,8 +258,10 @@ class Address extends React.Component {
             </div>
               {this.schedulesLink()}
               {this.schedules()}
-              {this.addressesInputLink()}
 
+              <AlarmContainer />
+
+              {this.addressesInputLink()}
             <div className='address-input-box'>
               {this.addressInput()}
             </div>

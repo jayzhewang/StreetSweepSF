@@ -4,8 +4,9 @@ import { requestAlarms,
          createAlarm,
          cancelAlarm } from '../../actions/alarm_actions';
 
-const mapStateToProps = state => ({
-  alarms: state.alarms
+const mapStateToProps = (state, ownProps) => ({
+  alarms: state.alarms,
+  addresses: ownProps.addresses
 });
 
 const mapDispatchToProps = dispatch => ({

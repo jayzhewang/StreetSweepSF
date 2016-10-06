@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import Reminder from './reminder';
 
-const mapStateToProps = (state, ownProps) => {
-  return {schedules: ownProps.schedules};
+const mapStateToProps = state => {
+  return {alarms: state.alarms};
 };
 
 const mapDispatchToProps = dispatch => ({

@@ -27349,6 +27349,10 @@
 	
 	var _schedule_container2 = _interopRequireDefault(_schedule_container);
 	
+	var _alarm_container = __webpack_require__(343);
+	
+	var _alarm_container2 = _interopRequireDefault(_alarm_container);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -27672,6 +27676,7 @@
 	            ),
 	            this.schedulesLink(),
 	            this.schedules(),
+	            _react2.default.createElement(_alarm_container2.default, null),
 	            this.addressesInputLink(),
 	            _react2.default.createElement(
 	              'div',
@@ -28057,8 +28062,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var mapStateToProps = function mapStateToProps(state, ownProps) {
-	  return { schedules: ownProps.schedules };
+	var mapStateToProps = function mapStateToProps(state) {
+	  return { alarms: state.alarms };
 	};
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
@@ -28082,10 +28087,6 @@
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
-	
-	var _alarm_container = __webpack_require__(343);
-	
-	var _alarm_container2 = _interopRequireDefault(_alarm_container);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -28124,11 +28125,10 @@
 	            this.props.schedules[1],
 	            ':',
 	            this.props.schedules[2]
-	          ),
-	          _react2.default.createElement(_alarm_container2.default, null)
+	          )
 	        );
 	      } else {
-	        return _react2.default.createElement(_alarm_container2.default, null);
+	        return _react2.default.createElement('span', null);
 	      }
 	    }
 	  }]);
@@ -28158,9 +28158,10 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var mapStateToProps = function mapStateToProps(state) {
+	var mapStateToProps = function mapStateToProps(state, ownProps) {
 	  return {
-	    alarms: state.alarms
+	    alarms: state.alarms,
+	    addresses: ownProps.addresses
 	  };
 	};
 	
@@ -28212,7 +28213,11 @@
 	
 	    var _this = _possibleConstructorReturn(this, (Alarm.__proto__ || Object.getPrototypeOf(Alarm)).call(this, props));
 	
+	    _this.state = {
+	      newLabel: 'Activate alarm'
+	    };
 	    _this.alarmName = 'remindme';
+	    _this.toggleAlarm = _this.toggleAlarm.bind(_this);
 	    return _this;
 	  }
 	
@@ -28220,15 +28225,6 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.props.requestAlarms();
-	      document.querySelector('#toggleAlarm').addEventListener('click', this.doToggleAlarm.bind(this));
-	      this.checkAlarm();
-	    }
-	  }, {
-	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate() {
-	      if (this.props.alarms !== undefined) {
-	        this.checkAlarm();
-	      }
 	    }
 	  }, {
 	    key: 'checkAlarm',
@@ -28238,23 +28234,19 @@
 	      var hasAlarm = this.props.alarms.some(function (a) {
 	        return a.name === _this2.alarmName;
 	      });
-	
 	      var newLabel = void 0;
 	      if (hasAlarm) {
-	        newLabel = 'Cancel alarm';
+	        this.setState({ newLabel: 'Cancel alarm' });
 	      } else {
-	        newLabel = 'Activate alarm';
+	        this.setState({ newLabel: 'Activate alarm' });
 	      }
-	
-	      document.getElementById('toggleAlarm').innerText = newLabel;
 	      if (callback) callback(hasAlarm);
 	    }
 	  }, {
-	    key: 'doToggleAlarm',
-	    value: function doToggleAlarm() {
+	    key: 'toggleAlarm',
+	    value: function toggleAlarm() {
 	      var _this3 = this;
 	
-	      window.console.log(this);
 	      this.checkAlarm(function (hasAlarm) {
 	        if (hasAlarm) {
 	          _this3.props.cancelAlarm(_this3.alarmName);
@@ -28265,16 +28257,25 @@
 	      });
 	    }
 	  }, {
+	    key: 'showAlarm',
+	    value: function showAlarm() {
+	      if (this.props.alarms && this.props.alarms.length > 0) {
+	        return _react2.default.createElement(
+	          'button',
+	          { onClick: this.toggleAlarm },
+	          this.state.newLabel
+	        );
+	      } else {
+	        return "";
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
 	        { id: 'info' },
-	        _react2.default.createElement(
-	          'button',
-	          { id: 'toggleAlarm' },
-	          'Activate alarm'
-	        )
+	        this.showAlarm()
 	      );
 	    }
 	  }]);

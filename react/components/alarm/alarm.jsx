@@ -4,39 +4,31 @@ class Alarm extends React.Component {
   constructor(props){
     super(props);
 
+    this.state = {
+      newLabel: 'Activate alarm'
+    };
     this.alarmName = 'remindme';
+    this.toggleAlarm = this.toggleAlarm.bind(this);
   }
 
   componentDidMount(){
     this.props.requestAlarms();
-    document.querySelector('#toggleAlarm').addEventListener('click', this.doToggleAlarm.bind(this));
-    this.checkAlarm();
-  }
-
-  componentDidUpdate(){
-    if(this.props.alarms !== undefined){
-      this.checkAlarm();
-    }
   }
 
   checkAlarm(callback) {
     let hasAlarm = this.props.alarms.some(a=>{
       return a.name === this.alarmName;
     });
-
     let newLabel;
     if (hasAlarm) {
-      newLabel = 'Cancel alarm';
+      this.setState({newLabel: 'Cancel alarm'});
     } else {
-      newLabel = 'Activate alarm';
+      this.setState({newLabel: 'Activate alarm'});
     }
-
-    document.getElementById('toggleAlarm').innerText = newLabel;
     if (callback) callback(hasAlarm);
   }
 
-  doToggleAlarm() {
-    window.console.log(this);
+  toggleAlarm() {
     this.checkAlarm( hasAlarm =>{
       if (hasAlarm) {
         this.props.cancelAlarm(this.alarmName);
@@ -50,10 +42,20 @@ class Alarm extends React.Component {
     });
   }
 
+  showAlarm(){
+    if(this.props.alarms && this.props.alarms.length > 0){
+      return (
+        <button onClick={this.toggleAlarm}>{this.state.newLabel}</button>
+      );
+    } else {
+      return "";
+    }
+  }
+
   render(){
     return(
       <div id="info">
-        <button id="toggleAlarm">Activate alarm</button>
+        {this.showAlarm()}
       </div>
     );
   }

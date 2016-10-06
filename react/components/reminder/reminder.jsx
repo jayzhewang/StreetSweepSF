@@ -1,5 +1,4 @@
 import React from 'react';
-import AlarmContainer from '../alarm/alarm_container';
 
 class Reminder extends React.Component {
   constructor(props){
@@ -16,13 +15,11 @@ class Reminder extends React.Component {
             <br />
             {this.props.schedules[1]}:{this.props.schedules[2]}
           </div>
-
-          <AlarmContainer />
         </div>
       );
     } else {
       return (
-        <AlarmContainer />
+        <span></span>
       );
     }
   }
