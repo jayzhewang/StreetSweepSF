@@ -22353,12 +22353,17 @@
 	
 	var _geocoder_reducer2 = _interopRequireDefault(_geocoder_reducer);
 	
+	var _notification_reducer = __webpack_require__(338);
+	
+	var _notification_reducer2 = _interopRequireDefault(_notification_reducer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var RootReducer = (0, _redux.combineReducers)({
 	  addresses: _address_reducer2.default,
 	  schedules: _schedule_reducer2.default,
-	  geocoders: _geocoder_reducer2.default
+	  geocoders: _geocoder_reducer2.default,
+	  notifications: _notification_reducer2.default
 	});
 	
 	exports.default = RootReducer;
@@ -26164,9 +26169,13 @@
 	
 	var _geocoder_middleware2 = _interopRequireDefault(_geocoder_middleware);
 	
+	var _notification_middleware = __webpack_require__(335);
+	
+	var _notification_middleware2 = _interopRequireDefault(_notification_middleware);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var RootMiddleware = (0, _redux.applyMiddleware)(_address_middleware2.default, _schedule_middleware2.default, _geocoder_middleware2.default);
+	var RootMiddleware = (0, _redux.applyMiddleware)(_address_middleware2.default, _schedule_middleware2.default, _geocoder_middleware2.default, _notification_middleware2.default);
 	
 	exports.default = RootMiddleware;
 
@@ -27983,6 +27992,132 @@
 	}(_react2.default.Component);
 	
 	exports.default = Reminder;
+
+/***/ },
+/* 335 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _notification_actions = __webpack_require__(336);
+	
+	var _notification_api_util = __webpack_require__(337);
+	
+	var NotificationMiddleware = function NotificationMiddleware(_ref) {
+	  var getState = _ref.getState;
+	  var dispatch = _ref.dispatch;
+	  return function (next) {
+	    return function (action) {
+	      switch (action.type) {
+	        case _notification_actions.NotificationConstants.REQUEST_NOTIFICATION:
+	          var success = function success(notifications) {
+	            return dispatch(_notification_actions.receiveNotification);
+	          };
+	          (0, _notification_api_util.fetchNotifications)(success);
+	          return next(action);
+	        case _notification_actions.NotificationConstants.CREATE_NOTIFICATION:
+	          var newNotification = action.newNotification;
+	          (0, _notification_api_util.createNotification)(newNotification);
+	          return next(action);
+	        default:
+	          return next(action);
+	      }
+	    };
+	  };
+	};
+	
+	exports.default = NotificationMiddleware;
+
+/***/ },
+/* 336 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var NotificationConstants = exports.NotificationConstants = {
+	  REQUEST_NOTIFICATION: 'REQUEST_NOTIFICATION',
+	  RECEIVE_NOTIFICATION: 'RECEIVE_NOTIFICATION',
+	  CREATE_NOTIFICATION: 'CREATE_NOTIFICATION'
+	};
+	
+	var requestNotification = function requestNotification() {
+	  return {
+	    type: NotificationConstants.REQUEST_NOTIFICATION
+	  };
+	};
+	
+	var receiveNotification = function receiveNotification(notifications) {
+	  return {
+	    type: NotificationConstants.RECEIVE_NOTIFICATION,
+	    notifications: notifications
+	  };
+	};
+	
+	var createNotification = function createNotification(newNotification) {
+	  return {
+	    type: NotificationConstants.CREATE_NOTIFICATION,
+	    newNotification: newNotification
+	  };
+	};
+
+/***/ },
+/* 337 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var fetchNotifications = exports.fetchNotifications = function fetchNotifications(successFunction) {
+	  chrome.storage.sync.get('notifications', successFunction);
+	};
+	
+	var createNotification = exports.createNotification = function createNotification(newNotification) {
+	  var title = newNotification.title;
+	  var message = newNotification.message;
+	
+	  chrome.notifications.create('reminder', {
+	    type: 'basic',
+	    iconUrl: './assets/icons/broom-cross-38.png',
+	    title: title,
+	    message: message
+	  }, function (notificationId) {});
+	};
+
+/***/ },
+/* 338 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _notification_actions = __webpack_require__(336);
+	
+	var NotificationReducer = function NotificationReducer() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case _notification_actions.NotificationConstants.RECEIVE_NOTIFICATION:
+	      var notifications = action.notifications;
+	      return notifications;
+	    default:
+	      return state;
+	  }
+	};
+	
+	exports.default = NotificationReducer;
 
 /***/ }
 /******/ ]);
