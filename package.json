@@ -22,13 +22,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jz-wang/StreetCleaningSF.git"
+    "url": "git+https://github.com/jz-wang/StreetSweepSF"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jz-wang/StreetCleaningSF/issues"
+    "url": "https://github.com/jz-wang/StreetSweepSF/issues"
   },
-  "homepage": "https://github.com/jz-wang/StreetCleaningSF#readme"
+  "homepage": "https://github.com/jz-wang/StreetSweepSF#readme"
 }
