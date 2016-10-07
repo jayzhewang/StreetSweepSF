@@ -6,3 +6,18 @@
 .reminder-list > div {
   padding-left: 20px;
 }
+
+.rem-list {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rem-list-hightlighted {
+  display: flex;
+  justify-content: space-between;
+  background: yellow;
+}
+
+.rem-hide {
+  visibility: hidden;
+}
