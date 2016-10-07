@@ -28127,11 +28127,21 @@
 	
 	    var _this = _possibleConstructorReturn(this, (Reminder.__proto__ || Object.getPrototypeOf(Reminder)).call(this, props));
 	
+	    _this.state = {
+	      hoursAhead: '6'
+	    };
+	
 	    _this.saveToChromeStorage = _this.saveToChromeStorage.bind(_this);
+	    _this.changeHoursAhead = _this.changeHoursAhead.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(Reminder, [{
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      window.console.log(this.state);
+	    }
+	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.props.getReminder();
@@ -28158,7 +28168,8 @@
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { id: 'rem-save' + i,
+	            { className: 'rem-list-last-child',
+	              id: 'rem-save' + i,
 	              onClick: function onClick() {
 	                return _this2.saveToChromeStorage(sche, i);
 	              } },
@@ -28170,7 +28181,8 @@
 	  }, {
 	    key: 'saveToChromeStorage',
 	    value: function saveToChromeStorage(sche, i) {
-	      var rems = [sche];
+	      var rems = sche;
+	      rems.unshift(this.state.hoursAhead);
 	      if (this.props.reminders && this.props.reminders.length > 0) {
 	        rems.concat(this.props.reminders);
 	      }
@@ -28178,7 +28190,12 @@
 	
 	      $('#rem' + i).removeClass('rem-list').addClass('rem-list-hightlighted');
 	      $('#rem-save' + i).remove();
-	      $('#rem' + i).append($('<div>Saved!</div>'));
+	      $('#rem' + i).append($('<div>Saved!</div>').addClass('rem-list-last-child-saved'));
+	    }
+	  }, {
+	    key: 'changeHoursAhead',
+	    value: function changeHoursAhead(event) {
+	      this.setState({ hoursAhead: event.target.value });
 	    }
 	  }, {
 	    key: 'render',
@@ -28191,6 +28208,27 @@
 	            'h1',
 	            null,
 	            'Setup Chrome Reminders'
+	          ),
+	          _react2.default.createElement(
+	            'select',
+	            { id: 'hours',
+	              onChange: this.changeHoursAhead,
+	              value: this.state.hoursAhead },
+	            _react2.default.createElement(
+	              'option',
+	              { value: '6' },
+	              'Remind 6 hrs ahead'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              { value: '12' },
+	              'Remind 12 hrs ahead'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              { value: '24' },
+	              'Remind 24 hrs ahead'
+	            )
 	          ),
 	          this.showReminders()
 	        );

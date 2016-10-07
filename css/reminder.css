@@ -4,12 +4,33 @@
 }
 
 .reminder-list > div {
-  padding-left: 20px;
+  padding-left: 15px;
+}
+
+.reminder-list > select {
+  margin: 0 0 5px 15px;
 }
 
 .rem-list {
   display: flex;
   justify-content: space-between;
+}
+
+.rem-list-last-child {
+  font-weight: bold;
+  margin-right: 10px;
+  height: 17px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.rem-list-last-child-saved {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.rem-list-last-child:hover {
+  cursor: pointer;
 }
 
 .rem-list-hightlighted {
