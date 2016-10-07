@@ -8,6 +8,7 @@
 
 .schedules-get:hover {
   cursor: pointer;
+  background: #eff7eb;
 }
 
 .schedules-list {
