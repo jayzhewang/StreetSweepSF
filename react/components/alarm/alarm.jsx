@@ -5,13 +5,27 @@ class Alarm extends React.Component {
     super(props);
 
     this.state = {
-      newLabel: 'Activate alarm'
+      newLabel: 'Activate alarms',
+      reminders: []
     };
     this.alarmName = 'remindme';
+    this.localReminders = [];
+
     this.toggleAlarm = this.toggleAlarm.bind(this);
   }
 
+  componentDidUpdate(){
+    let reminders = this.props.reminders;
+    if(reminders &&
+       (this.localReminders === undefined ||
+        reminders.length > this.localReminders.length)){
+      this.localReminders = reminders;
+      this.setState({reminders: reminders});
+    }
+  }
+
   componentDidMount(){
+    this.localReminders = this.props.reminders;
     this.props.requestAlarms();
   }
 
@@ -19,11 +33,11 @@ class Alarm extends React.Component {
     let hasAlarm = this.props.alarms.some(a=>{
       return a.name === this.alarmName;
     });
-    let newLabel;
+
     if (hasAlarm) {
-      this.setState({newLabel: 'Cancel alarm'});
+      this.setState({newLabel: 'Cancel alarms'});
     } else {
-      this.setState({newLabel: 'Activate alarm'});
+      this.setState({newLabel: 'Activate alarms'});
     }
     if (callback) callback(hasAlarm);
   }
@@ -43,7 +57,7 @@ class Alarm extends React.Component {
   }
 
   showAlarm(){
-    if(this.props.alarms && this.props.alarms.length > 0){
+    if(this.props.reminders && this.props.reminders.length > 0){
       return (
         <button onClick={this.toggleAlarm}>{this.state.newLabel}</button>
       );

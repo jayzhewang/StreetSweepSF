@@ -58,7 +58,7 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _root = __webpack_require__(321);
+	var _root = __webpack_require__(324);
 	
 	var _root2 = _interopRequireDefault(_root);
 	
@@ -21453,7 +21453,7 @@
 	
 	var _root_reducer2 = _interopRequireDefault(_root_reducer);
 	
-	var _root_middleware = __webpack_require__(312);
+	var _root_middleware = __webpack_require__(314);
 	
 	var _root_middleware2 = _interopRequireDefault(_root_middleware);
 	
@@ -22357,7 +22357,7 @@
 	
 	var _alarm_reducer2 = _interopRequireDefault(_alarm_reducer);
 	
-	var _reminder_reducer = __webpack_require__(343);
+	var _reminder_reducer = __webpack_require__(312);
 	
 	var _reminder_reducer2 = _interopRequireDefault(_reminder_reducer);
 	
@@ -26231,25 +26231,104 @@
 	  value: true
 	});
 	
+	var _reminder_actions = __webpack_require__(313);
+	
+	var _merge = __webpack_require__(190);
+	
+	var _merge2 = _interopRequireDefault(_merge);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ReminderReducer = function ReminderReducer() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case _reminder_actions.ReminderConstants.RECEIVE_REMINDER:
+	      var rems = action.rems['reminders'];
+	      return rems;
+	    case _reminder_actions.ReminderConstants.RECEIVE_SAVED_REMINDER:
+	      var savedRems = action.rems;
+	      return savedRems;
+	    default:
+	      return state;
+	  }
+	};
+	
+	exports.default = ReminderReducer;
+
+/***/ },
+/* 313 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var ReminderConstants = exports.ReminderConstants = {
+	  SAVE_REMINDER: 'SAVE_REMINDER',
+	  GET_REMINDER: 'GET_REMINDER',
+	  RECEIVE_REMINDER: 'RECEIVE_REMINDER',
+	  RECEIVE_SAVED_REMINDER: 'RECEIVE_SAVED_REMINDER'
+	};
+	
+	var saveReminder = exports.saveReminder = function saveReminder(rems) {
+	  return {
+	    type: ReminderConstants.SAVE_REMINDER,
+	    rems: rems
+	  };
+	};
+	
+	var getReminder = exports.getReminder = function getReminder() {
+	  return {
+	    type: ReminderConstants.GET_REMINDER
+	  };
+	};
+	
+	var receiveReminder = exports.receiveReminder = function receiveReminder(rems) {
+	  return {
+	    type: ReminderConstants.RECEIVE_REMINDER,
+	    rems: rems
+	  };
+	};
+	
+	var receiveSavedReminder = exports.receiveSavedReminder = function receiveSavedReminder(rems) {
+	  return {
+	    type: ReminderConstants.RECEIVE_SAVED_REMINDER,
+	    rems: rems
+	  };
+	};
+
+/***/ },
+/* 314 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
 	var _redux = __webpack_require__(173);
 	
-	var _address_middleware = __webpack_require__(313);
+	var _address_middleware = __webpack_require__(315);
 	
 	var _address_middleware2 = _interopRequireDefault(_address_middleware);
 	
-	var _schedule_middleware = __webpack_require__(315);
+	var _schedule_middleware = __webpack_require__(317);
 	
 	var _schedule_middleware2 = _interopRequireDefault(_schedule_middleware);
 	
-	var _geocoder_middleware = __webpack_require__(317);
+	var _geocoder_middleware = __webpack_require__(319);
 	
 	var _geocoder_middleware2 = _interopRequireDefault(_geocoder_middleware);
 	
-	var _alarm_middleware = __webpack_require__(319);
+	var _alarm_middleware = __webpack_require__(321);
 	
 	var _alarm_middleware2 = _interopRequireDefault(_alarm_middleware);
 	
-	var _reminder_middleware = __webpack_require__(342);
+	var _reminder_middleware = __webpack_require__(323);
 	
 	var _reminder_middleware2 = _interopRequireDefault(_reminder_middleware);
 	
@@ -26260,7 +26339,7 @@
 	exports.default = RootMiddleware;
 
 /***/ },
-/* 313 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26271,7 +26350,7 @@
 	
 	var _address_actions = __webpack_require__(189);
 	
-	var _chrome_api_util = __webpack_require__(314);
+	var _chrome_api_util = __webpack_require__(316);
 	
 	var AddressMiddleware = function AddressMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -26299,7 +26378,7 @@
 	exports.default = AddressMiddleware;
 
 /***/ },
-/* 314 */
+/* 316 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26315,8 +26394,8 @@
 	  chrome.storage.sync.set({ 'addresses': data });
 	};
 	
-	var setChromeSyncAPIReminder = exports.setChromeSyncAPIReminder = function setChromeSyncAPIReminder(rem) {
-	  chrome.storage.sync.set({ 'reminders': rem });
+	var setChromeSyncAPIReminder = exports.setChromeSyncAPIReminder = function setChromeSyncAPIReminder(rem, successFunction) {
+	  chrome.storage.sync.set({ 'reminders': rem }, successFunction);
 	};
 	
 	var getChromeSyncAPIReminder = exports.getChromeSyncAPIReminder = function getChromeSyncAPIReminder(successFunction) {
@@ -26324,7 +26403,7 @@
 	};
 
 /***/ },
-/* 315 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26335,9 +26414,9 @@
 	
 	var _schedule_actions = __webpack_require__(307);
 	
-	var _chrome_api_util = __webpack_require__(314);
+	var _chrome_api_util = __webpack_require__(316);
 	
-	var _rails_api_util = __webpack_require__(316);
+	var _rails_api_util = __webpack_require__(318);
 	
 	var ScheduleMiddleware = function ScheduleMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -26363,7 +26442,7 @@
 	exports.default = ScheduleMiddleware;
 
 /***/ },
-/* 316 */
+/* 318 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26381,7 +26460,7 @@
 	};
 
 /***/ },
-/* 317 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26392,7 +26471,7 @@
 	
 	var _geocoder_actions = __webpack_require__(309);
 	
-	var _geocoder_api_util = __webpack_require__(318);
+	var _geocoder_api_util = __webpack_require__(320);
 	
 	var GeocoderMiddleware = function GeocoderMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -26417,7 +26496,7 @@
 	exports.default = GeocoderMiddleware;
 
 /***/ },
-/* 318 */
+/* 320 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26435,7 +26514,7 @@
 	};
 
 /***/ },
-/* 319 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26446,7 +26525,7 @@
 	
 	var _alarm_actions = __webpack_require__(311);
 	
-	var _alarm_api_util = __webpack_require__(320);
+	var _alarm_api_util = __webpack_require__(322);
 	
 	var AlarmMiddleware = function AlarmMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -26479,7 +26558,7 @@
 	exports.default = AlarmMiddleware;
 
 /***/ },
-/* 320 */
+/* 322 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26500,7 +26579,61 @@
 	};
 
 /***/ },
-/* 321 */
+/* 323 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
+	var _reminder_actions = __webpack_require__(313);
+	
+	var _chrome_api_util = __webpack_require__(316);
+	
+	var ReminderMiddleware = function ReminderMiddleware(_ref) {
+	  var getState = _ref.getState;
+	  var dispatch = _ref.dispatch;
+	  return function (next) {
+	    return function (action) {
+	      var _ret = function () {
+	        switch (action.type) {
+	          case _reminder_actions.ReminderConstants.SAVE_REMINDER:
+	            var newReminders = action.rems;
+	            var success1 = function success1() {
+	              return dispatch((0, _reminder_actions.receiveSavedReminder)(newReminders));
+	            };
+	            (0, _chrome_api_util.setChromeSyncAPIReminder)(newReminders, success1);
+	            return {
+	              v: next(action)
+	            };
+	          case _reminder_actions.ReminderConstants.GET_REMINDER:
+	            var success = function success(rems) {
+	              return dispatch((0, _reminder_actions.receiveReminder)(rems));
+	            };
+	            (0, _chrome_api_util.getChromeSyncAPIReminder)(success);
+	            return {
+	              v: next(action)
+	            };
+	          default:
+	            return {
+	              v: next(action)
+	            };
+	        }
+	      }();
+	
+	      if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+	    };
+	  };
+	};
+	
+	exports.default = ReminderMiddleware;
+
+/***/ },
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26513,9 +26646,9 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactRedux = __webpack_require__(322);
+	var _reactRedux = __webpack_require__(325);
 	
-	var _app = __webpack_require__(331);
+	var _app = __webpack_require__(334);
 	
 	var _app2 = _interopRequireDefault(_app);
 	
@@ -26533,7 +26666,7 @@
 	exports.default = Root;
 
 /***/ },
-/* 322 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26541,11 +26674,11 @@
 	exports.__esModule = true;
 	exports.connect = exports.Provider = undefined;
 	
-	var _Provider = __webpack_require__(323);
+	var _Provider = __webpack_require__(326);
 	
 	var _Provider2 = _interopRequireDefault(_Provider);
 	
-	var _connect = __webpack_require__(326);
+	var _connect = __webpack_require__(329);
 	
 	var _connect2 = _interopRequireDefault(_connect);
 	
@@ -26555,7 +26688,7 @@
 	exports.connect = _connect2["default"];
 
 /***/ },
-/* 323 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26565,11 +26698,11 @@
 	
 	var _react = __webpack_require__(1);
 	
-	var _storeShape = __webpack_require__(324);
+	var _storeShape = __webpack_require__(327);
 	
 	var _storeShape2 = _interopRequireDefault(_storeShape);
 	
-	var _warning = __webpack_require__(325);
+	var _warning = __webpack_require__(328);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -26639,7 +26772,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 324 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26655,7 +26788,7 @@
 	});
 
 /***/ },
-/* 325 */
+/* 328 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26684,7 +26817,7 @@
 	}
 
 /***/ },
-/* 326 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26696,19 +26829,19 @@
 	
 	var _react = __webpack_require__(1);
 	
-	var _storeShape = __webpack_require__(324);
+	var _storeShape = __webpack_require__(327);
 	
 	var _storeShape2 = _interopRequireDefault(_storeShape);
 	
-	var _shallowEqual = __webpack_require__(327);
+	var _shallowEqual = __webpack_require__(330);
 	
 	var _shallowEqual2 = _interopRequireDefault(_shallowEqual);
 	
-	var _wrapActionCreators = __webpack_require__(328);
+	var _wrapActionCreators = __webpack_require__(331);
 	
 	var _wrapActionCreators2 = _interopRequireDefault(_wrapActionCreators);
 	
-	var _warning = __webpack_require__(325);
+	var _warning = __webpack_require__(328);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -26716,11 +26849,11 @@
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _hoistNonReactStatics = __webpack_require__(329);
+	var _hoistNonReactStatics = __webpack_require__(332);
 	
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 	
-	var _invariant = __webpack_require__(330);
+	var _invariant = __webpack_require__(333);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -27083,7 +27216,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 327 */
+/* 330 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -27114,7 +27247,7 @@
 	}
 
 /***/ },
-/* 328 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27131,7 +27264,7 @@
 	}
 
 /***/ },
-/* 329 */
+/* 332 */
 /***/ function(module, exports) {
 
 	/**
@@ -27187,7 +27320,7 @@
 
 
 /***/ },
-/* 330 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27245,7 +27378,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 331 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27258,7 +27391,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _address_container = __webpack_require__(332);
+	var _address_container = __webpack_require__(335);
 	
 	var _address_container2 = _interopRequireDefault(_address_container);
 	
@@ -27295,7 +27428,7 @@
 	exports.default = App;
 
 /***/ },
-/* 332 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27304,9 +27437,9 @@
 	  value: true
 	});
 	
-	var _reactRedux = __webpack_require__(322);
+	var _reactRedux = __webpack_require__(325);
 	
-	var _address = __webpack_require__(333);
+	var _address = __webpack_require__(336);
 	
 	var _address2 = _interopRequireDefault(_address);
 	
@@ -27314,12 +27447,15 @@
 	
 	var _geocoder_actions = __webpack_require__(309);
 	
+	var _reminder_actions = __webpack_require__(313);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var mapStateToProps = function mapStateToProps(state) {
 	  return { addresses: state.addresses,
 	    schedules: state.schedules,
-	    geocoders: state.geocoders };
+	    geocoders: state.geocoders,
+	    reminders: state.reminders };
 	};
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
@@ -27332,6 +27468,9 @@
 	    },
 	    requestGeocoder: function requestGeocoder(addressString) {
 	      return dispatch((0, _geocoder_actions.requestGeocoder)(addressString));
+	    },
+	    getReminder: function getReminder() {
+	      return dispatch((0, _reminder_actions.getReminder)());
 	    }
 	  };
 	};
@@ -27339,7 +27478,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_address2.default);
 
 /***/ },
-/* 333 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27354,15 +27493,15 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _map = __webpack_require__(334);
+	var _map = __webpack_require__(337);
 	
 	var _map2 = _interopRequireDefault(_map);
 	
-	var _schedule_container = __webpack_require__(335);
+	var _schedule_container = __webpack_require__(338);
 	
 	var _schedule_container2 = _interopRequireDefault(_schedule_container);
 	
-	var _alarm_container = __webpack_require__(339);
+	var _alarm_container = __webpack_require__(342);
 	
 	var _alarm_container2 = _interopRequireDefault(_alarm_container);
 	
@@ -27387,12 +27526,14 @@
 	    _this.addresses = [];
 	    _this.fetchedAddresses = [];
 	    _this.setChromeCount = 0;
+	    _this.localReminders = [];
 	    _this.state = {
 	      showSchedules: false,
 	      showSchedulesLink: true,
 	      showAddressInput: false,
 	      showAddressInputLink: true,
 	      showMap: false,
+	      reminders: [],
 	      mapCoords: [37.7749, -122.4194],
 	      inputAddress: ""
 	    };
@@ -27414,6 +27555,7 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.props.getChromeSync();
+	      this.props.getReminder();
 	    }
 	  }, {
 	    key: 'componentDidUpdate',
@@ -27425,6 +27567,12 @@
 	        var addressString = addresses[0].split(" ").join("+");
 	        this.fetchedAddresses.push(addresses);
 	        this.props.requestGeocoder(addressString);
+	      }
+	
+	      var reminders = this.props.reminders;
+	      if (reminders && reminders.length > this.localReminders.length) {
+	        this.localReminders = reminders;
+	        this.setState({ reminders: reminders });
 	      }
 	    }
 	  }, {
@@ -27689,7 +27837,7 @@
 	            ),
 	            this.schedulesLink(),
 	            this.schedules(),
-	            _react2.default.createElement(_alarm_container2.default, null),
+	            _react2.default.createElement(_alarm_container2.default, { reminders: this.state.reminders }),
 	            this.addressesInputLink(),
 	            _react2.default.createElement(
 	              'div',
@@ -27714,7 +27862,7 @@
 	exports.default = Address;
 
 /***/ },
-/* 334 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27783,7 +27931,7 @@
 	exports.default = Map;
 
 /***/ },
-/* 335 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27792,9 +27940,9 @@
 	  value: true
 	});
 	
-	var _reactRedux = __webpack_require__(322);
+	var _reactRedux = __webpack_require__(325);
 	
-	var _schedule = __webpack_require__(336);
+	var _schedule = __webpack_require__(339);
 	
 	var _schedule2 = _interopRequireDefault(_schedule);
 	
@@ -27820,7 +27968,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_schedule2.default);
 
 /***/ },
-/* 336 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27835,7 +27983,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reminder_container = __webpack_require__(337);
+	var _reminder_container = __webpack_require__(340);
 	
 	var _reminder_container2 = _interopRequireDefault(_reminder_container);
 	
@@ -28058,7 +28206,7 @@
 	exports.default = Schedule;
 
 /***/ },
-/* 337 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28067,19 +28215,20 @@
 	  value: true
 	});
 	
-	var _reactRedux = __webpack_require__(322);
+	var _reactRedux = __webpack_require__(325);
 	
-	var _reminder = __webpack_require__(338);
+	var _reminder = __webpack_require__(341);
 	
 	var _reminder2 = _interopRequireDefault(_reminder);
 	
-	var _reminder_actions = __webpack_require__(341);
+	var _reminder_actions = __webpack_require__(313);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var mapStateToProps = function mapStateToProps(state) {
-	  return { alarms: state.alarms,
-	    reminders: state.reminders };
+	  return {
+	    reminders: state.reminders
+	  };
 	};
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
@@ -28096,7 +28245,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_reminder2.default);
 
 /***/ },
-/* 338 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28128,7 +28277,8 @@
 	    var _this = _possibleConstructorReturn(this, (Reminder.__proto__ || Object.getPrototypeOf(Reminder)).call(this, props));
 	
 	    _this.state = {
-	      hoursAhead: '6'
+	      hoursAhead: '6',
+	      reminders: []
 	    };
 	
 	    _this.saveToChromeStorage = _this.saveToChromeStorage.bind(_this);
@@ -28137,11 +28287,6 @@
 	  }
 	
 	  _createClass(Reminder, [{
-	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate() {
-	      window.console.log(this.state);
-	    }
-	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.props.getReminder();
@@ -28182,12 +28327,14 @@
 	    key: 'saveToChromeStorage',
 	    value: function saveToChromeStorage(sche, i) {
 	      var rems = sche;
-	      rems.unshift(this.state.hoursAhead);
 	      if (this.props.reminders && this.props.reminders.length > 0) {
 	        rems.concat(this.props.reminders);
+	        rems.push(this.state.hoursAhead);
+	      } else {
+	        rems.push(this.state.hoursAhead);
 	      }
-	      this.props.saveReminder(rems);
 	
+	      this.props.saveReminder(rems);
 	      $('#rem' + i).removeClass('rem-list').addClass('rem-list-hightlighted');
 	      $('#rem-save' + i).remove();
 	      $('#rem' + i).append($('<div>Saved!</div>').addClass('rem-list-last-child-saved'));
@@ -28244,7 +28391,7 @@
 	exports.default = Reminder;
 
 /***/ },
-/* 339 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28253,9 +28400,9 @@
 	  value: true
 	});
 	
-	var _reactRedux = __webpack_require__(322);
+	var _reactRedux = __webpack_require__(325);
 	
-	var _alarm = __webpack_require__(340);
+	var _alarm = __webpack_require__(343);
 	
 	var _alarm2 = _interopRequireDefault(_alarm);
 	
@@ -28265,6 +28412,7 @@
 	
 	var mapStateToProps = function mapStateToProps(state, ownProps) {
 	  return {
+	    reminders: ownProps.reminders,
 	    alarms: state.alarms,
 	    addresses: ownProps.addresses
 	  };
@@ -28287,7 +28435,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_alarm2.default);
 
 /***/ },
-/* 340 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28319,16 +28467,29 @@
 	    var _this = _possibleConstructorReturn(this, (Alarm.__proto__ || Object.getPrototypeOf(Alarm)).call(this, props));
 	
 	    _this.state = {
-	      newLabel: 'Activate alarm'
+	      newLabel: 'Activate alarms',
+	      reminders: []
 	    };
 	    _this.alarmName = 'remindme';
+	    _this.localReminders = [];
+	
 	    _this.toggleAlarm = _this.toggleAlarm.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(Alarm, [{
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      var reminders = this.props.reminders;
+	      if (reminders && (this.localReminders === undefined || reminders.length > this.localReminders.length)) {
+	        this.localReminders = reminders;
+	        this.setState({ reminders: reminders });
+	      }
+	    }
+	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      this.localReminders = this.props.reminders;
 	      this.props.requestAlarms();
 	    }
 	  }, {
@@ -28339,11 +28500,11 @@
 	      var hasAlarm = this.props.alarms.some(function (a) {
 	        return a.name === _this2.alarmName;
 	      });
-	      var newLabel = void 0;
+	
 	      if (hasAlarm) {
-	        this.setState({ newLabel: 'Cancel alarm' });
+	        this.setState({ newLabel: 'Cancel alarms' });
 	      } else {
-	        this.setState({ newLabel: 'Activate alarm' });
+	        this.setState({ newLabel: 'Activate alarms' });
 	      }
 	      if (callback) callback(hasAlarm);
 	    }
@@ -28364,7 +28525,7 @@
 	  }, {
 	    key: 'showAlarm',
 	    value: function showAlarm() {
-	      if (this.props.alarms && this.props.alarms.length > 0) {
+	      if (this.props.reminders && this.props.reminders.length > 0) {
 	        return _react2.default.createElement(
 	          'button',
 	          { onClick: this.toggleAlarm },
@@ -28389,107 +28550,6 @@
 	}(_react2.default.Component);
 	
 	exports.default = Alarm;
-
-/***/ },
-/* 341 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var ReminderConstants = exports.ReminderConstants = {
-	  SAVE_REMINDER: 'SAVE_REMINDER',
-	  GET_REMINDER: 'GET_REMINDER',
-	  RECEIVE_REMINDER: 'RECEIVE_REMINDER'
-	};
-	
-	var saveReminder = exports.saveReminder = function saveReminder(rem) {
-	  return {
-	    type: ReminderConstants.SAVE_REMINDER,
-	    rem: rem
-	  };
-	};
-	
-	var getReminder = exports.getReminder = function getReminder() {
-	  return {
-	    type: ReminderConstants.GET_REMINDER
-	  };
-	};
-	
-	var receiveReminder = exports.receiveReminder = function receiveReminder(rems) {
-	  return {
-	    type: ReminderConstants.RECEIVE_REMINDER,
-	    rems: rems
-	  };
-	};
-
-/***/ },
-/* 342 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _reminder_actions = __webpack_require__(341);
-	
-	var _chrome_api_util = __webpack_require__(314);
-	
-	var ReminderMiddleware = function ReminderMiddleware(_ref) {
-	  var getState = _ref.getState;
-	  var dispatch = _ref.dispatch;
-	  return function (next) {
-	    return function (action) {
-	      switch (action.type) {
-	        case _reminder_actions.ReminderConstants.SAVE_REMINDER:
-	          var newReminders = action.rem;
-	          (0, _chrome_api_util.setChromeSyncAPIReminder)(newReminders);
-	          return next(action);
-	        case _reminder_actions.ReminderConstants.RECEIVE_REMINDER:
-	          var success = function success(rems) {
-	            return dispatch((0, _reminder_actions.receiveReminder)(rems));
-	          };
-	          (0, _chrome_api_util.getChromeSyncAPIReminder)(success);
-	          return next(action);
-	        default:
-	          return next(action);
-	      }
-	    };
-	  };
-	};
-	
-	exports.default = ReminderMiddleware;
-
-/***/ },
-/* 343 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _reminder_actions = __webpack_require__(341);
-	
-	var ReminderReducer = function ReminderReducer() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-	  var action = arguments[1];
-	
-	  switch (action.type) {
-	    case _reminder_actions.ReminderConstants.RECEIVE_REMINDER:
-	      var rems = action.rems;
-	      return rems;
-	    default:
-	      return state;
-	  }
-	};
-	
-	exports.default = ReminderReducer;
 
 /***/ }
 /******/ ]);

@@ -4,17 +4,14 @@ class Reminder extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      hoursAhead: '6'
+      hoursAhead: '6',
+      reminders: []
     };
 
     this.saveToChromeStorage = this.saveToChromeStorage.bind(this);
     this.changeHoursAhead = this.changeHoursAhead.bind(this);
   }
-
-  componentDidUpdate(){
-      window.console.log(this.state);
-  }
-
+  
   componentDidMount(){
     this.props.getReminder();
   }
@@ -42,12 +39,14 @@ class Reminder extends React.Component {
 
   saveToChromeStorage(sche, i){
     let rems = sche;
-    rems.unshift(this.state.hoursAhead);
     if(this.props.reminders && this.props.reminders.length > 0){
         rems.concat(this.props.reminders);
+        rems.push(this.state.hoursAhead);
+    } else {
+      rems.push(this.state.hoursAhead);
     }
-    this.props.saveReminder(rems);
 
+    this.props.saveReminder(rems);
     $(`#rem${i}`).removeClass('rem-list').addClass('rem-list-hightlighted');
     $(`#rem-save${i}`).remove();
     $(`#rem${i}`).append($('<div>Saved!</div>').addClass('rem-list-last-child-saved'));

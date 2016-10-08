@@ -1,12 +1,13 @@
 export const ReminderConstants = {
   SAVE_REMINDER: 'SAVE_REMINDER',
   GET_REMINDER: 'GET_REMINDER',
-  RECEIVE_REMINDER: 'RECEIVE_REMINDER'
+  RECEIVE_REMINDER: 'RECEIVE_REMINDER',
+  RECEIVE_SAVED_REMINDER: 'RECEIVE_SAVED_REMINDER'
 };
 
-export const saveReminder = rem => ({
+export const saveReminder = rems => ({
   type: ReminderConstants.SAVE_REMINDER,
-  rem
+  rems
 });
 
 export const getReminder = () => ({
@@ -15,5 +16,10 @@ export const getReminder = () => ({
 
 export const receiveReminder = rems => ({
   type: ReminderConstants.RECEIVE_REMINDER,
+  rems
+});
+
+export const receiveSavedReminder = rems => ({
+  type: ReminderConstants.RECEIVE_SAVED_REMINDER,
   rems
 });

@@ -6,8 +6,8 @@ export const setChromeSyncAPI = data => {
   chrome.storage.sync.set({'addresses': data});
 };
 
-export const setChromeSyncAPIReminder = rem => {
-  chrome.storage.sync.set({'reminders': rem});
+export const setChromeSyncAPIReminder = (rem, successFunction) => {
+  chrome.storage.sync.set({'reminders': rem}, successFunction);
 };
 
 export const getChromeSyncAPIReminder = successFunction => {

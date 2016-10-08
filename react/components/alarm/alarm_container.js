@@ -5,6 +5,7 @@ import { requestAlarms,
          cancelAlarm } from '../../actions/alarm_actions';
 
 const mapStateToProps = (state, ownProps) => ({
+  reminders: ownProps.reminders,
   alarms: state.alarms,
   addresses: ownProps.addresses
 });

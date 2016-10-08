@@ -9,12 +9,14 @@ class Address extends React.Component {
     this.addresses = [];
     this.fetchedAddresses = [];
     this.setChromeCount = 0;
+    this.localReminders = [];
     this.state = {
       showSchedules: false,
       showSchedulesLink: true,
       showAddressInput: false,
       showAddressInputLink: true,
       showMap: false,
+      reminders: [],
       mapCoords: [37.7749, -122.4194],
       inputAddress: ""
     };
@@ -33,6 +35,7 @@ class Address extends React.Component {
 
   componentDidMount(){
     this.props.getChromeSync();
+    this.props.getReminder();
   }
 
   componentDidUpdate(){
@@ -45,6 +48,13 @@ class Address extends React.Component {
       let addressString = addresses[0].split(" ").join("+");
       this.fetchedAddresses.push(addresses);
       this.props.requestGeocoder(addressString);
+    }
+
+    let reminders = this.props.reminders;
+    if(reminders &&
+       reminders.length > this.localReminders.length){
+      this.localReminders = reminders;
+      this.setState({reminders: reminders});
     }
   }
 
@@ -259,7 +269,7 @@ class Address extends React.Component {
               {this.schedulesLink()}
               {this.schedules()}
 
-              <AlarmContainer />
+              <AlarmContainer reminders={this.state.reminders}/>
 
               {this.addressesInputLink()}
             <div className='address-input-box'>

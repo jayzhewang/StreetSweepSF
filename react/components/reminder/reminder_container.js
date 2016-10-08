@@ -3,10 +3,9 @@ import Reminder from './reminder';
 import { saveReminder,
          getReminder } from '../../actions/reminder_actions';
 
-const mapStateToProps = state => {
-  return {alarms: state.alarms,
-          reminders: state.reminders};
-};
+const mapStateToProps = state => ({
+  reminders: state.reminders
+});
 
 const mapDispatchToProps = dispatch => ({
   saveReminder: rem => dispatch(saveReminder(rem)),
