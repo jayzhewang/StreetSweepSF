@@ -6,21 +6,21 @@ class Alarm extends React.Component {
 
     this.state = {
       newLabel: 'Activate alarms',
-      reminders: []
+      reminders: [],
+      showAlarm: false
     };
     this.alarmName = 'remindme';
     this.localReminders = [];
+    this.localAlarms = [];
 
     this.toggleAlarm = this.toggleAlarm.bind(this);
+    this.checkAlarm = this.checkAlarm.bind(this);
   }
 
   componentDidUpdate(){
-    let reminders = this.props.reminders;
-    if(reminders &&
-       (this.localReminders === undefined ||
-        reminders.length > this.localReminders.length)){
-      this.localReminders = reminders;
-      this.setState({reminders: reminders});
+    if(this.props.alarms &&
+       this.props.alarms.length > this.localAlarms){
+         this.localAlarms = this.props.alarms;
     }
   }
 
@@ -30,14 +30,14 @@ class Alarm extends React.Component {
   }
 
   checkAlarm(callback) {
-    let hasAlarm = this.props.alarms.some(a=>{
+    let hasAlarm = this.localAlarms.some(a=>{
       return a.name === this.alarmName;
     });
 
     if (hasAlarm) {
-      this.setState({newLabel: 'Cancel alarms'});
-    } else {
       this.setState({newLabel: 'Activate alarms'});
+    } else {
+      this.setState({newLabel: 'Cancel alarms'});
     }
     if (callback) callback(hasAlarm);
   }
@@ -53,22 +53,23 @@ class Alarm extends React.Component {
         );
       }
       this.checkAlarm();
+      this.props.requestAlarms();
     });
   }
 
   showAlarm(){
-    if(this.props.reminders && this.props.reminders.length > 0){
+    if(this.props.showAlarm){
       return (
-        <button onClick={this.toggleAlarm}>{this.state.newLabel}</button>
+        <div className='alarm-activation'>
+          <div onClick={this.toggleAlarm}>{this.state.newLabel}</div>
+        </div>
       );
-    } else {
-      return "";
     }
   }
 
   render(){
     return(
-      <div id="info">
+      <div>
         {this.showAlarm()}
       </div>
     );

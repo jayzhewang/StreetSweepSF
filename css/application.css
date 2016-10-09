@@ -2,6 +2,7 @@
 @import 'schedule.css';
 @import 'map.css';
 @import 'reminder.css';
+@import 'alarm.css';
 
 html, body, header, footer, section, article, div,
 strong, a, img, p, h1, h2, h3, time, small,

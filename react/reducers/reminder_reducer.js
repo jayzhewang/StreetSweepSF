@@ -5,7 +5,11 @@ const ReminderReducer = (state = [], action) => {
   switch(action.type){
     case ReminderConstants.RECEIVE_REMINDER:
       const rems = action.rems['reminders'];
-      return rems;
+      if(rems === undefined){
+        return state;
+      } else {
+        return rems;
+      }
     case ReminderConstants.RECEIVE_SAVED_REMINDER:
       const savedRems = action.rems;
       return savedRems;

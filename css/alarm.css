@@ -1,0 +1,16 @@
+.alarm-activation {
+  background: #DFF0D8;
+  border-top: 1px solid #b2dba1;
+  border-bottom: 1px solid #b2dba1;
+  margin-bottom: 10px;
+  padding: 5px 0 5px 10px;
+}
+
+.alarm-activation:hover{
+  cursor: pointer;
+  background: #eff7eb;
+}
+
+.alarm-activation > div {
+  font-weight: bold;
+}

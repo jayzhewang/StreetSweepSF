@@ -26246,7 +26246,11 @@
 	  switch (action.type) {
 	    case _reminder_actions.ReminderConstants.RECEIVE_REMINDER:
 	      var rems = action.rems['reminders'];
-	      return rems;
+	      if (rems === undefined) {
+	        return state;
+	      } else {
+	        return rems;
+	      }
 	    case _reminder_actions.ReminderConstants.RECEIVE_SAVED_REMINDER:
 	      var savedRems = action.rems;
 	      return savedRems;
@@ -27532,6 +27536,7 @@
 	      showSchedulesLink: true,
 	      showAddressInput: false,
 	      showAddressInputLink: true,
+	      showAlarm: false,
 	      showMap: false,
 	      reminders: [],
 	      mapCoords: [37.7749, -122.4194],
@@ -27569,10 +27574,8 @@
 	        this.props.requestGeocoder(addressString);
 	      }
 	
-	      var reminders = this.props.reminders;
-	      if (reminders && reminders.length > this.localReminders.length) {
-	        this.localReminders = reminders;
-	        this.setState({ reminders: reminders });
+	      if (this.props.reminders && this.props.reminders.length > 0 && !this.state.showAlarm) {
+	        this.setState({ showAlarm: true });
 	      }
 	    }
 	  }, {
@@ -27610,7 +27613,8 @@
 	      this.props.setChromeSync(this.addresses);
 	      this.setState({ showSchedules: false,
 	        showSchedulesLink: true,
-	        showMap: false });
+	        showMap: false,
+	        showAlarm: false });
 	      var i = this.fetchedAddresses.indexOf(address);
 	      this.fetchedAddresses.splice(i, 1);
 	    }
@@ -27837,7 +27841,7 @@
 	            ),
 	            this.schedulesLink(),
 	            this.schedules(),
-	            _react2.default.createElement(_alarm_container2.default, { reminders: this.state.reminders }),
+	            _react2.default.createElement(_alarm_container2.default, { showAlarm: this.state.showAlarm }),
 	            this.addressesInputLink(),
 	            _react2.default.createElement(
 	              'div',
@@ -28468,22 +28472,23 @@
 	
 	    _this.state = {
 	      newLabel: 'Activate alarms',
-	      reminders: []
+	      reminders: [],
+	      showAlarm: false
 	    };
 	    _this.alarmName = 'remindme';
 	    _this.localReminders = [];
+	    _this.localAlarms = [];
 	
 	    _this.toggleAlarm = _this.toggleAlarm.bind(_this);
+	    _this.checkAlarm = _this.checkAlarm.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(Alarm, [{
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate() {
-	      var reminders = this.props.reminders;
-	      if (reminders && (this.localReminders === undefined || reminders.length > this.localReminders.length)) {
-	        this.localReminders = reminders;
-	        this.setState({ reminders: reminders });
+	      if (this.props.alarms && this.props.alarms.length > this.localAlarms) {
+	        this.localAlarms = this.props.alarms;
 	      }
 	    }
 	  }, {
@@ -28497,14 +28502,14 @@
 	    value: function checkAlarm(callback) {
 	      var _this2 = this;
 	
-	      var hasAlarm = this.props.alarms.some(function (a) {
+	      var hasAlarm = this.localAlarms.some(function (a) {
 	        return a.name === _this2.alarmName;
 	      });
 	
 	      if (hasAlarm) {
-	        this.setState({ newLabel: 'Cancel alarms' });
-	      } else {
 	        this.setState({ newLabel: 'Activate alarms' });
+	      } else {
+	        this.setState({ newLabel: 'Cancel alarms' });
 	      }
 	      if (callback) callback(hasAlarm);
 	    }
@@ -28520,19 +28525,22 @@
 	          _this3.props.createAlarm(_this3.alarmName, { delayInMinutes: 0.1, periodInMinutes: 0.1 });
 	        }
 	        _this3.checkAlarm();
+	        _this3.props.requestAlarms();
 	      });
 	    }
 	  }, {
 	    key: 'showAlarm',
 	    value: function showAlarm() {
-	      if (this.props.reminders && this.props.reminders.length > 0) {
+	      if (this.props.showAlarm) {
 	        return _react2.default.createElement(
-	          'button',
-	          { onClick: this.toggleAlarm },
-	          this.state.newLabel
+	          'div',
+	          { className: 'alarm-activation' },
+	          _react2.default.createElement(
+	            'div',
+	            { onClick: this.toggleAlarm },
+	            this.state.newLabel
+	          )
 	        );
-	      } else {
-	        return "";
 	      }
 	    }
 	  }, {
@@ -28540,7 +28548,7 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        { id: 'info' },
+	        null,
 	        this.showAlarm()
 	      );
 	    }

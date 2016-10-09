@@ -16,7 +16,7 @@ const mapDispatchToProps = dispatch => ({
   getChromeSync: () => dispatch(getChromeSync()),
   setChromeSync: change => dispatch(setChromeSync(change)),
   requestGeocoder: addressString => dispatch(requestGeocoder(addressString)),
-  getReminder: () => dispatch(getReminder())
+  getReminder: () => dispatch(getReminder()),
 });
 
 export default connect(
