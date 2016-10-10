@@ -36,8 +36,6 @@ class Alarm extends React.Component {
     let hasAlarm = this.props.alarms.some(a=>{
       return a.name === this.alarmName;
     });
-    window.console.log('in checked alarm');
-    window.console.log(hasAlarm);
     if (hasAlarm) {
       this.setState({newLabel: 'Activate alarms'});
     } else {

@@ -50,7 +50,7 @@ class Reminder extends React.Component {
     rems.push(this.state.hoursAhead);
     rems.push(sche[sche.length - 1]);
 
-    this.props.saveReminder(['10/10/2016', '14:50', '16:45', '1', '38 Glenview Drive']);
+    this.props.saveReminder(rems);
     $(`#rem${i}`).removeClass('rem-list').addClass('rem-list-hightlighted');
     $(`#rem-save${i}`).remove();
     $(`#rem${i}`).append($('<div>Saved!</div>').addClass('rem-list-last-child-saved'));
