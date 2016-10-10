@@ -22397,7 +22397,7 @@
 	
 	  switch (action.type) {
 	    case _address_actions.AddressConstants.RECEIVE_CHROME_SYNC:
-	      var storage = action.obj.addresses;
+	      var storage = action.obj['sssf-addresses'];
 	      if (storage === undefined) {
 	        return state;
 	      } else {
@@ -26245,7 +26245,7 @@
 	
 	  switch (action.type) {
 	    case _reminder_actions.ReminderConstants.RECEIVE_REMINDER:
-	      var rems = action.rems['reminders'];
+	      var rems = action.rems['sssf-reminders'];
 	      if (rems === undefined) {
 	        return state;
 	      } else {
@@ -26391,19 +26391,19 @@
 	  value: true
 	});
 	var getChromeSyncAPI = exports.getChromeSyncAPI = function getChromeSyncAPI(successFunction) {
-	  chrome.storage.sync.get('addresses', successFunction);
+	  chrome.storage.sync.get('sssf-addresses', successFunction);
 	};
 	
 	var setChromeSyncAPI = exports.setChromeSyncAPI = function setChromeSyncAPI(data) {
-	  chrome.storage.sync.set({ 'addresses': data });
+	  chrome.storage.sync.set({ 'sssf-addresses': data });
 	};
 	
 	var setChromeSyncAPIReminder = exports.setChromeSyncAPIReminder = function setChromeSyncAPIReminder(rem, successFunction) {
-	  chrome.storage.sync.set({ 'reminders': rem }, successFunction);
+	  chrome.storage.sync.set({ 'sssf-reminders': rem }, successFunction);
 	};
 	
 	var getChromeSyncAPIReminder = exports.getChromeSyncAPIReminder = function getChromeSyncAPIReminder(successFunction) {
-	  chrome.storage.sync.get('reminders', successFunction);
+	  chrome.storage.sync.get('sssf-reminders', successFunction);
 	};
 
 /***/ },
@@ -27932,7 +27932,6 @@
 	      var mapOptions = {
 	        center: { lat: coord[0], lng: coord[1] },
 	        zoom: 15,
-	        // zoomControl: false,
 	        mapTypeControl: false
 	      };
 	
@@ -28506,7 +28505,7 @@
 	      reminders: [],
 	      showAlarm: false
 	    };
-	    _this.alarmName = 'remindme';
+	    _this.alarmName = 'sssf-remindme';
 	    _this.localReminders = [];
 	    _this.localAlarms = [];
 	
@@ -28563,7 +28562,6 @@
 	  }, {
 	    key: 'showAlarm',
 	    value: function showAlarm() {
-	      window.console.log(this.props.showAlarm);
 	      if (this.props.showAlarm) {
 	        return _react2.default.createElement(
 	          'div',

@@ -9,7 +9,7 @@ class Alarm extends React.Component {
       reminders: [],
       showAlarm: false
     };
-    this.alarmName = 'remindme';
+    this.alarmName = 'sssf-remindme';
     this.localReminders = [];
     this.localAlarms = [];
 
@@ -59,7 +59,6 @@ class Alarm extends React.Component {
   }
 
   showAlarm(){
-    window.console.log(this.props.showAlarm);
     if(this.props.showAlarm){
       return (
         <div className='alarm-activation'>

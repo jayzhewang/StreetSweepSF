@@ -4,7 +4,7 @@ import merge from 'lodash/merge';
 const AddressReducer = (state = [], action) => {
   switch(action.type){
     case AddressConstants.RECEIVE_CHROME_SYNC:
-      const storage = action.obj.addresses;
+      const storage = action.obj['sssf-addresses'];
       if(storage === undefined){
         return state;
       } else {

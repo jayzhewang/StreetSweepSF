@@ -4,7 +4,7 @@ import merge from 'lodash/merge';
 const ReminderReducer = (state = [], action) => {
   switch(action.type){
     case ReminderConstants.RECEIVE_REMINDER:
-      const rems = action.rems['reminders'];
+      const rems = action.rems['sssf-reminders'];
       if(rems === undefined){
         return state;
       } else {
