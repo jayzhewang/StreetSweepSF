@@ -23,6 +23,8 @@ class Alarm extends React.Component {
          this.localAlarms = this.props.alarms;
          this.setState({newLabel: 'Cancel alarms'});
     }
+    $('.alarm-activation').toggleClass("highlighted", this.state.newLabel === 'Cancel alarms');
+    $('.alarm-activation').toggleClass("highlighted:hover", this.state.newLabel === 'Cancel alarms');
   }
 
   componentDidMount(){
@@ -31,17 +33,16 @@ class Alarm extends React.Component {
   }
 
   checkAlarm(callback) {
-    let hasAlarm = this.localAlarms.some(a=>{
+    let hasAlarm = this.props.alarms.some(a=>{
       return a.name === this.alarmName;
     });
-
+    window.console.log('in checked alarm');
+    window.console.log(hasAlarm);
     if (hasAlarm) {
       this.setState({newLabel: 'Activate alarms'});
     } else {
       this.setState({newLabel: 'Cancel alarms'});
     }
-    $('.alarm-activation').toggleClass("highlighted", !hasAlarm);
-    $('.alarm-activation').toggleClass("highlighted:hover", !hasAlarm);
     if (callback) callback(hasAlarm);
   }
 

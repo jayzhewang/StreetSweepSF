@@ -28373,7 +28373,7 @@
 	      rems.push(this.state.hoursAhead);
 	      rems.push(sche[sche.length - 1]);
 	
-	      this.props.saveReminder(rems);
+	      this.props.saveReminder(['10/10/2016', '14:50', '16:45', '1', '38 Glenview Drive']);
 	      $('#rem' + i).removeClass('rem-list').addClass('rem-list-hightlighted');
 	      $('#rem-save' + i).remove();
 	      $('#rem' + i).append($('<div>Saved!</div>').addClass('rem-list-last-child-saved'));
@@ -28526,6 +28526,8 @@
 	        this.localAlarms = this.props.alarms;
 	        this.setState({ newLabel: 'Cancel alarms' });
 	      }
+	      $('.alarm-activation').toggleClass("highlighted", this.state.newLabel === 'Cancel alarms');
+	      $('.alarm-activation').toggleClass("highlighted:hover", this.state.newLabel === 'Cancel alarms');
 	    }
 	  }, {
 	    key: 'componentDidMount',
@@ -28538,17 +28540,16 @@
 	    value: function checkAlarm(callback) {
 	      var _this2 = this;
 	
-	      var hasAlarm = this.localAlarms.some(function (a) {
+	      var hasAlarm = this.props.alarms.some(function (a) {
 	        return a.name === _this2.alarmName;
 	      });
-	
+	      window.console.log('in checked alarm');
+	      window.console.log(hasAlarm);
 	      if (hasAlarm) {
 	        this.setState({ newLabel: 'Activate alarms' });
 	      } else {
 	        this.setState({ newLabel: 'Cancel alarms' });
 	      }
-	      $('.alarm-activation').toggleClass("highlighted", !hasAlarm);
-	      $('.alarm-activation').toggleClass("highlighted:hover", !hasAlarm);
 	      if (callback) callback(hasAlarm);
 	    }
 	  }, {
