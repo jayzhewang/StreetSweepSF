@@ -14,3 +14,11 @@
 .alarm-activation > div {
   font-weight: bold;
 }
+
+.highlighted {
+  background: yellow;
+}
+
+.highlighted:hover {
+  background: yellow;
+}

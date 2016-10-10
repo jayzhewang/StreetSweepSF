@@ -83,6 +83,11 @@ class Schedule extends React.Component {
 
   _filterNextWeeks(schedules, week, earliestSchedule, plusAmount){
     let currentWeekNum = this.getCurrentWeekNumber() + plusAmount;
+    if(currentWeekNum === 6){
+      currentWeekNum = 1;
+    } else if (currentWeekNum === 7){
+      currentWeekNum = 2;
+    }
     let currentDay = new Date();
 
     for(let i = 0; i < schedules.length; i ++){

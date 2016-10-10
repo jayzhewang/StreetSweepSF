@@ -28117,6 +28117,11 @@
 	    key: '_filterNextWeeks',
 	    value: function _filterNextWeeks(schedules, week, earliestSchedule, plusAmount) {
 	      var currentWeekNum = this.getCurrentWeekNumber() + plusAmount;
+	      if (currentWeekNum === 6) {
+	        currentWeekNum = 1;
+	      } else if (currentWeekNum === 7) {
+	        currentWeekNum = 2;
+	      }
 	      var currentDay = new Date();
 	
 	      for (var i = 0; i < schedules.length; i++) {
@@ -28542,6 +28547,8 @@
 	      } else {
 	        this.setState({ newLabel: 'Cancel alarms' });
 	      }
+	      $('.alarm-activation').toggleClass("highlighted", !hasAlarm);
+	      $('.alarm-activation').toggleClass("highlighted:hover", !hasAlarm);
 	      if (callback) callback(hasAlarm);
 	    }
 	  }, {

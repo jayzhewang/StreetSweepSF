@@ -40,6 +40,8 @@ class Alarm extends React.Component {
     } else {
       this.setState({newLabel: 'Cancel alarms'});
     }
+    $('.alarm-activation').toggleClass("highlighted", !hasAlarm);
+    $('.alarm-activation').toggleClass("highlighted:hover", !hasAlarm);
     if (callback) callback(hasAlarm);
   }
 
