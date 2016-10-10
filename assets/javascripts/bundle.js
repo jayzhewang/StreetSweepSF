@@ -27475,6 +27475,9 @@
 	    },
 	    getReminder: function getReminder() {
 	      return dispatch((0, _reminder_actions.getReminder)());
+	    },
+	    saveReminder: function saveReminder(rem) {
+	      return dispatch((0, _reminder_actions.saveReminder)(rem));
 	    }
 	  };
 	};
@@ -27538,7 +27541,6 @@
 	      showAddressInputLink: true,
 	      showAlarm: false,
 	      showMap: false,
-	      reminders: [],
 	      mapCoords: [37.7749, -122.4194],
 	      inputAddress: ""
 	    };
@@ -27551,6 +27553,7 @@
 	    _this.setAddresses = _this.setAddresses.bind(_this);
 	    _this.closeMap = _this.closeMap.bind(_this);
 	    _this.closeInputLink = _this.closeInputLink.bind(_this);
+	    _this.removeReminder = _this.removeReminder.bind(_this);
 	    return _this;
 	  }
 	
@@ -27603,10 +27606,12 @@
 	      this.setState({ showAddressInput: false,
 	        showAddressInputLink: true,
 	        inputAddress: "" });
+	      this.props.getReminder();
 	    }
 	  }, {
 	    key: 'removeAddress',
 	    value: function removeAddress(address, e) {
+	      this.removeReminder(address);
 	      e.preventDefault();
 	      var idx = this.addresses.indexOf(address);
 	      this.addresses.splice(idx, 1);
@@ -27614,9 +27619,16 @@
 	      this.setState({ showSchedules: false,
 	        showSchedulesLink: true,
 	        showMap: false,
-	        showAlarm: false });
+	        showAlarm: false
+	      });
 	      var i = this.fetchedAddresses.indexOf(address);
 	      this.fetchedAddresses.splice(i, 1);
+	      this.props.getReminder();
+	    }
+	  }, {
+	    key: 'removeReminder',
+	    value: function removeReminder(address) {
+	      this.props.saveReminder("");
 	    }
 	
 	    //Address---------------------------------------------------------------
@@ -27626,6 +27638,13 @@
 	    value: function showAddressInput() {
 	      this.setState({ showAddressInput: true,
 	        showAddressInputLink: false });
+	    }
+	  }, {
+	    key: 'showAddressInputLink',
+	    value: function showAddressInputLink() {
+	      if (this.fetchedAddresses.length === 0) {
+	        return this.addressesInputLink();
+	      }
 	    }
 	  }, {
 	    key: 'addressesInputLink',
@@ -27814,6 +27833,13 @@
 	    //MISC------------------------------------------------------------------
 	
 	  }, {
+	    key: 'showAlarm',
+	    value: function showAlarm() {
+	      if (this.props.reminders && this.props.reminders.length > 0) {
+	        return _react2.default.createElement(_alarm_container2.default, { showAlarm: this.state.showAlarm });
+	      }
+	    }
+	  }, {
 	    key: 'update',
 	    value: function update(field) {
 	      var _this3 = this;
@@ -27841,8 +27867,8 @@
 	            ),
 	            this.schedulesLink(),
 	            this.schedules(),
-	            _react2.default.createElement(_alarm_container2.default, { showAlarm: this.state.showAlarm }),
-	            this.addressesInputLink(),
+	            this.showAlarm(),
+	            this.showAddressInputLink(),
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'address-input-box' },
@@ -28231,6 +28257,7 @@
 	
 	var mapStateToProps = function mapStateToProps(state) {
 	  return {
+	    addresses: state.addresses,
 	    reminders: state.reminders
 	  };
 	};
@@ -28300,7 +28327,12 @@
 	    value: function showReminders() {
 	      var _this2 = this;
 	
-	      return [this.props.schedules].map(function (sche, i) {
+	      var schedules = [this.props.schedules];
+	      for (var i = 0; i < this.props.addresses.length; i++) {
+	        schedules[i].push(this.props.addresses[i]);
+	      }
+	
+	      return schedules.map(function (sche, i) {
 	        return _react2.default.createElement(
 	          'div',
 	          { className: 'rem-list',
@@ -28330,13 +28362,12 @@
 	  }, {
 	    key: 'saveToChromeStorage',
 	    value: function saveToChromeStorage(sche, i) {
-	      var rems = sche;
+	      var rems = sche.slice(0, sche.length - 1);
 	      if (this.props.reminders && this.props.reminders.length > 0) {
 	        rems.concat(this.props.reminders);
-	        rems.push(this.state.hoursAhead);
-	      } else {
-	        rems.push(this.state.hoursAhead);
 	      }
+	      rems.push(this.state.hoursAhead);
+	      rems.push(sche[sche.length - 1]);
 	
 	      this.props.saveReminder(rems);
 	      $('#rem' + i).removeClass('rem-list').addClass('rem-list-hightlighted');
@@ -28489,6 +28520,7 @@
 	    value: function componentDidUpdate() {
 	      if (this.props.alarms && this.props.alarms.length > this.localAlarms) {
 	        this.localAlarms = this.props.alarms;
+	        this.setState({ newLabel: 'Cancel alarms' });
 	      }
 	    }
 	  }, {
@@ -28531,6 +28563,7 @@
 	  }, {
 	    key: 'showAlarm',
 	    value: function showAlarm() {
+	      window.console.log(this.props.showAlarm);
 	      if (this.props.showAlarm) {
 	        return _react2.default.createElement(
 	          'div',

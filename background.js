@@ -1,7 +1,6 @@
-var dbName = 'todos-vanillajs';
-
 function showNotification(storedData) {
-  window.console.log('reached notifications');
+  window.console.log('in show');
+  window.console.log(storedData);
   chrome.notifications.create('reminder', {
     type: 'basic',
     iconUrl: './assets/icons/broom-cross-38.png',
@@ -11,6 +10,5 @@ function showNotification(storedData) {
 }
 
 chrome.alarms.onAlarm.addListener(function(alarm){
-  window.console.log('reached listener');
-   chrome.storage.local.get('addresses', showNotification);
+   chrome.storage.sync.get('reminders', showNotification);
 });

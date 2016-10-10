@@ -17,7 +17,6 @@ class Address extends React.Component {
       showAddressInputLink: true,
       showAlarm: false,
       showMap: false,
-      reminders: [],
       mapCoords: [37.7749, -122.4194],
       inputAddress: ""
     };
@@ -30,6 +29,7 @@ class Address extends React.Component {
     this.setAddresses = this.setAddresses.bind(this);
     this.closeMap = this.closeMap.bind(this);
     this.closeInputLink = this.closeInputLink.bind(this);
+    this.removeReminder = this.removeReminder.bind(this);
   }
 
 //Lifecycle-------------------------------------------------------------
@@ -78,9 +78,11 @@ class Address extends React.Component {
     this.setState({showAddressInput: false,
                    showAddressInputLink: true,
                    inputAddress: ""});
+    this.props.getReminder();
   }
 
   removeAddress(address, e){
+    this.removeReminder(address);
     e.preventDefault();
     let idx = this.addresses.indexOf(address);
     this.addresses.splice(idx, 1);
@@ -88,9 +90,15 @@ class Address extends React.Component {
     this.setState({showSchedules: false,
                    showSchedulesLink: true,
                    showMap: false,
-                   showAlarm: false});
+                   showAlarm: false,
+                  });
     let i = this.fetchedAddresses.indexOf(address);
     this.fetchedAddresses.splice(i, 1);
+    this.props.getReminder();
+  }
+
+  removeReminder(address){
+    this.props.saveReminder("");
   }
 
 //Address---------------------------------------------------------------
@@ -98,6 +106,12 @@ class Address extends React.Component {
   showAddressInput(){
     this.setState({ showAddressInput: true,
                     showAddressInputLink: false });
+  }
+
+  showAddressInputLink(){
+    if(this.fetchedAddresses.length === 0){
+      return this.addressesInputLink();
+    }
   }
 
   addressesInputLink(){
@@ -250,6 +264,11 @@ class Address extends React.Component {
   }
 
 //MISC------------------------------------------------------------------
+  showAlarm(){
+    if(this.props.reminders && this.props.reminders.length > 0){
+      return <AlarmContainer showAlarm={this.state.showAlarm}/>;
+    }
+  }
 
   update(field){
     return e => { this.setState({[field]: e.currentTarget.value }); };
@@ -270,9 +289,9 @@ class Address extends React.Component {
               {this.schedulesLink()}
               {this.schedules()}
 
-              <AlarmContainer showAlarm={this.state.showAlarm}/>
+              {this.showAlarm()}
 
-              {this.addressesInputLink()}
+              {this.showAddressInputLink()}
             <div className='address-input-box'>
               {this.addressInput()}
             </div>

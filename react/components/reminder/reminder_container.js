@@ -4,6 +4,7 @@ import { saveReminder,
          getReminder } from '../../actions/reminder_actions';
 
 const mapStateToProps = state => ({
+  addresses: state.addresses,
   reminders: state.reminders
 });
 

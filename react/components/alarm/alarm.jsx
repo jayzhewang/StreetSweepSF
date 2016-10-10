@@ -21,6 +21,7 @@ class Alarm extends React.Component {
     if(this.props.alarms &&
        this.props.alarms.length > this.localAlarms){
          this.localAlarms = this.props.alarms;
+         this.setState({newLabel: 'Cancel alarms'});
     }
   }
 
@@ -58,6 +59,7 @@ class Alarm extends React.Component {
   }
 
   showAlarm(){
+    window.console.log(this.props.showAlarm);
     if(this.props.showAlarm){
       return (
         <div className='alarm-activation'>

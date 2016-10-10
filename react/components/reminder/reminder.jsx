@@ -11,13 +11,18 @@ class Reminder extends React.Component {
     this.saveToChromeStorage = this.saveToChromeStorage.bind(this);
     this.changeHoursAhead = this.changeHoursAhead.bind(this);
   }
-  
+
   componentDidMount(){
     this.props.getReminder();
   }
 
   showReminders(){
-    return [this.props.schedules].map((sche, i)=>{
+    let schedules = [this.props.schedules];
+    for(let i = 0; i < this.props.addresses.length; i++){
+      schedules[i].push(this.props.addresses[i]);
+    }
+
+    return schedules.map((sche, i)=>{
       return (
         <div className='rem-list'
              id={`rem${i}`}
@@ -38,13 +43,12 @@ class Reminder extends React.Component {
   }
 
   saveToChromeStorage(sche, i){
-    let rems = sche;
+    let rems = sche.slice(0, sche.length - 1);
     if(this.props.reminders && this.props.reminders.length > 0){
         rems.concat(this.props.reminders);
-        rems.push(this.state.hoursAhead);
-    } else {
-      rems.push(this.state.hoursAhead);
     }
+    rems.push(this.state.hoursAhead);
+    rems.push(sche[sche.length - 1]);
 
     this.props.saveReminder(rems);
     $(`#rem${i}`).removeClass('rem-list').addClass('rem-list-hightlighted');

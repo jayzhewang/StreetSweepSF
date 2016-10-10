@@ -4,6 +4,7 @@ import { getChromeSync,
          setChromeSync } from '../../actions/address_actions';
 import { requestGeocoder } from '../../actions/geocoder_actions';
 import { getReminder } from '../../actions/reminder_actions';
+import { saveReminder } from '../../actions/reminder_actions';
 
 const mapStateToProps = state => {
   return { addresses: state.addresses,
@@ -17,6 +18,7 @@ const mapDispatchToProps = dispatch => ({
   setChromeSync: change => dispatch(setChromeSync(change)),
   requestGeocoder: addressString => dispatch(requestGeocoder(addressString)),
   getReminder: () => dispatch(getReminder()),
+  saveReminder: rem => dispatch(saveReminder(rem))
 });
 
 export default connect(
