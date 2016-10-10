@@ -28343,13 +28343,10 @@
 	            id: 'rem' + i,
 	            key: 'reminder' + i },
 	          _react2.default.createElement(
-	            'div',
-	            null,
-	            sche[0],
-	            _react2.default.createElement('br', null),
-	            sche[1],
-	            ' - ',
-	            sche[2]
+	            'li',
+	            { type: 'A',
+	              className: 'rem-list-first-child' },
+	            sche[0]
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -28416,7 +28413,11 @@
 	              'Remind 24 hrs ahead'
 	            )
 	          ),
-	          this.showReminders()
+	          _react2.default.createElement(
+	            'ol',
+	            null,
+	            this.showReminders()
+	          )
 	        );
 	      } else {
 	        return _react2.default.createElement('span', null);

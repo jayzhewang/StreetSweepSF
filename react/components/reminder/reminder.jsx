@@ -27,11 +27,10 @@ class Reminder extends React.Component {
         <div className='rem-list'
              id={`rem${i}`}
              key={`reminder${i}`}>
-          <div>
+          <li type='A'
+              className='rem-list-first-child'>
             {sche[0]}
-            <br />
-            {sche[1]} - {sche[2]}
-          </div>
+          </li>
           <div className='rem-list-last-child'
                id={`rem-save${i}`}
                onClick={()=>this.saveToChromeStorage(sche, i)}>
@@ -72,7 +71,9 @@ class Reminder extends React.Component {
                   <option value="12">Remind 12 hrs ahead</option>
                   <option value="24">Remind 24 hrs ahead</option>
           </select>
-          {this.showReminders()}
+          <ol>
+            {this.showReminders()}
+          </ol>
         </div>
       );
     } else {
