@@ -51,7 +51,7 @@ class Alarm extends React.Component {
       } else {
         this.props.createAlarm(
           this.alarmName,
-          {delayInMinutes: 0.1, periodInMinutes: 0.1}
+          {delayInMinutes: 2, periodInMinutes: 2}
         );
       }
       this.checkAlarm();

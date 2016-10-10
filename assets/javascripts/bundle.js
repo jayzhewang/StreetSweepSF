@@ -28560,7 +28560,7 @@
 	        if (hasAlarm) {
 	          _this3.props.cancelAlarm(_this3.alarmName);
 	        } else {
-	          _this3.props.createAlarm(_this3.alarmName, { delayInMinutes: 0.1, periodInMinutes: 0.1 });
+	          _this3.props.createAlarm(_this3.alarmName, { delayInMinutes: 2, periodInMinutes: 2 });
 	        }
 	        _this3.checkAlarm();
 	        _this3.props.requestAlarms();
