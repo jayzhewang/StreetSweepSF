@@ -72,10 +72,10 @@ if(difference < (hoursBefore + 0.166) &&
 <p>All react components subscribes to the store intelligently, some components that do not have parent-child relations also reacts to each other by listening to specific changes, thus rendering correctly.</p>
 
 ```javascript
-if(this.props.schedules !== undefined &&
+if(this.props.schedules &&
    this.state.schedules.length === 0){
     let filtered = this.filterSchedules(this.props.schedules);
-    if(filtered.length !== 0 &&
+    if(filtered.length > 0 &&
        filtered.length !== this.state.schedules.length){
       this.schedules = filtered;
       this.setState({schedules: filtered});
