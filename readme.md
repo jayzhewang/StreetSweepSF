@@ -15,8 +15,8 @@ height='91'/>
      height='250'/>
 <p>Google Maps Integration for easy address lookup.</p>
 <img src='http://res.cloudinary.com/cloudlicious/image/upload/v1476986965/sssf2-cropped_vdxvhy.png'
-     width='400'
-     height='400'/>
+     width='200'
+     height='200'/>
 <p>Desktop notifications.</p>
 <img src='http://res.cloudinary.com/cloudlicious/image/upload/v1476986584/sssf3-cropped_vguzt2.png'
      width='400'
