@@ -78,9 +78,11 @@ if(this.props.schedules !== undefined &&
 <p>Google Maps API is used for an quick address overview.</p>
 
 <h1>Future Improvements</h1>
-<p>Mobile SMS Alerts</p>
-<p>Ability to simultaneously keep track of multiple reminders</p>
-<p>Ability to manage reminders in a separate window.</p>
-<p>Algorithms for finding the best nearby re-parking location.</p>
-<p>Google Maps API integrated with KML data that users can interactively click on and find out more schedules information.</p>
-<p>Mobile Application</p>
+<ol>
+  <li type='I'>Mobile SMS Alerts</li>
+  <li type='I'>Ability to simultaneously keep track of multiple reminders</li>
+  <li type='I'>Ability to manage reminders in a separate window.</li>
+  <li type='I'>Algorithms for finding the best nearby re-parking location.</li>
+  <li type='I'>Google Maps API integrated with KML data that users can interactively click on and find out more schedules information.</li>
+  <li type='I'>Mobile Application</li>
+</ol>
