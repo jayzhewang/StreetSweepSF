@@ -13,10 +13,10 @@ height='91'/>
 <img src='http://res.cloudinary.com/cloudlicious/image/upload/v1476986356/sssf1_yemfva.png'
      width='400'
      height='250'/>
-<p>Google Maps Integration</p>
-<img src='http://res.cloudinary.com/cloudlicious/image/upload/v1476986357/sssf2_wetihe.png'
+<p>Google Maps Integration for easy address lookup.</p>
+<img src='http://res.cloudinary.com/cloudlicious/image/upload/v1476986965/sssf2-cropped_vdxvhy.png'
      width='400'
-     height='250'/>
+     height='400'/>
 <p>Desktop notifications.</p>
 <img src='http://res.cloudinary.com/cloudlicious/image/upload/v1476986584/sssf3-cropped_vguzt2.png'
      width='400'
@@ -77,7 +77,7 @@ if(this.props.schedules !== undefined &&
 <p>Chrome Storage API is used to sync user data across platforms.</p>
 <p>Google Maps API is used for an quick address overview.</p>
 
-<h1><Future Improvements</p>
+<h1><Future Improvements</h1>
 <p>Mobile SMS Alerts</p>
 <p>Ability to simultaneously keep track of multiple reminders</p>
 <p>Ability to manage reminders in a separate window.</p>
