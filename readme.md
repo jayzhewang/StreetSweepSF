@@ -23,7 +23,16 @@ height='91'/>
      height='90'/>
 
 <h1>Implementations</h1>
-<p>StreetSweepSF uses a dedicated rails server from which to fetch street cleaning data. When a user enters an address and hits get schedule, the app makes a GET request and upon receiving the raw data, parses it through the react schedules component and cleverly finds out the next street cleaning schedule.</p>
+<p>StreetSweepSF uses a dedicated rails server from which to fetch street cleaning data. The rails controller isolates the street name and queries the database.</p>
+```ruby
+if params[:address]
+  @schedules = Schedule.where('"CORRIDOR" LIKE ?', "%#{params[:address].split(" ")[1]}%").all
+...
+  render :index
+end
+```
+
+<p>When a user enters an address and hits get schedule, the app makes a GET request and upon receiving the raw data, parses it through the react schedules component and cleverly finds out the next street cleaning schedule.</p>
 
 ```javascript
 _filterNextWeeks(schedules, week, earliestSchedule, plusAmount){
