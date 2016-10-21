@@ -52,7 +52,7 @@ return [plusAmount, earliestSchedule];
 }
 ```
 
-<p>When the user activates how many hours ahead to be reminded, chrome alerts are created on a persistent set interval, chrome notifications listens for alarms and are created when the current time matches the criteria for notifications.</p>
+<p>When the user activates alerts and the numbers hours ahead to be reminded of, chrome alarms are created, and persists on a 2 minutes interval in the chrome background page. Chrome notifications listens for alarms and are automatically created when the current time matches the criteria for desktop notifications. Chrome alarms and the corresponding notification are cleared once 20 minutes have passed after the initial alert.</p>
 
 ```javascript
 if(difference < (hoursBefore + 0.166) &&
@@ -69,22 +69,25 @@ if(difference < (hoursBefore + 0.166) &&
 }
 ```
 
-<p>All react components subscribes to the store intelligently, some components that do not have parent-child relations also reacts to each other by listening to specific changes, thus rendering correctly.</p>
+<p>All react components subscribes to the store intelligently, some components that do not have parent-child relations also react to each other by listening to specific changes, thus rendering correctly.</p>
 
 ```javascript
-if(this.props.schedules &&
-   this.state.schedules.length === 0){
-    let filtered = this.filterSchedules(this.props.schedules);
-    if(filtered.length > 0 &&
-       filtered.length !== this.state.schedules.length){
-      this.schedules = filtered;
-      this.setState({schedules: filtered});
-    }
+componentDidUpdate(){
+  if(this.props.schedules &&
+    this.state.schedules.length === 0){
+      let filtered = this.filterSchedules(this.props.schedules);
+      if(filtered.length > 0 &&
+         filtered.length !== this.state.schedules.length){
+          this.schedules = filtered;
+          this.setState({schedules: filtered});
+      }
+  }
+  ...
 }
 ```
 
 <p>Chrome Storage API is used to sync user data across platforms.</p>
-<p>Google Maps API is used for an quick address overview.</p>
+<p>Google Maps API is used for a quick address overview.</p>
 
 <h1>Future Improvements</h1>
 <ol>
