@@ -52,7 +52,7 @@ return [plusAmount, earliestSchedule];
 }
 ```
 
-<p>When the user activates alerts and the numbers hours ahead to be reminded of, chrome alarms are created, and persists on a 2 minutes interval in the chrome background page. Chrome notifications listens for alarms and are automatically created when the current time matches the criteria for desktop notifications. Chrome alarms and the corresponding notification are cleared once 20 minutes have passed after the initial alert.</p>
+<p>When the user activates alerts and the numbers hours ahead to be reminded of, chrome alarms are created, and persists on a 2 minutes interval in the chrome background page. Chrome notification listens for alarms and are automatically created when the current time matches the criteria for desktop notifications. Chrome alarms and the corresponding notification are cleared once 20 minutes have passed after the initial alert.</p>
 
 ```javascript
 if(difference < (hoursBefore + 0.166) &&
