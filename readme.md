@@ -69,7 +69,7 @@ if(difference < (hoursBefore + 0.166) &&
 }
 ```
 
-<p>All react components subscribes to the store intelligently, some components that do not have parent-child relations also react to each other by listening to specific changes, thus rendering correctly.</p>
+<p>All react components subscribe to the store intelligently, some components that do not have parent-child relations also react to each other by listening to specific changes, thus rendering correctly.</p>
 
 ```javascript
 componentDidUpdate(){
